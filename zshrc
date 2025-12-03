@@ -55,11 +55,26 @@ PROMPT='%F{red}┌──[%F{cyan}%D{%H:%M}%F{red}]─[%F{default}%n%F{red}@%F{cy
 [ -f "$HOME/.config/aliases" ] && . "$HOME/.config/aliases"
 [ -f "$HOME/.config/environment" ] && . "$HOME/.config/environment"
 
-# fzf options # ctrl R, ctrl T and alt C
-export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border'
+# fzf options
+export FZF_DEFAULT_OPTS='--height 40% --layout=reverse'
+
+# Default command for fzf
 export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
-export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+
+# Ctrl-T: Find files
+export FZF_CTRL_T_COMMAND='fd --type f --hidden --follow --exclude .git'
+
+# Disable Alt-C since it doesn't work in your setup
 export FZF_ALT_C_COMMAND='fd --type d --hidden --follow --exclude .git'
+
+# Ctrl-G go to folder
+fzf-cd-widget() {
+  local dir
+  dir=$(fd --type d --hidden --follow --exclude .git 2>/dev/null | fzf +m) && cd "$dir"
+  zle reset-prompt
+}
+zle -N fzf-cd-widget
+bindkey '^G' fzf-cd-widget
 
 # Note needs to be sourced after defining ^^
 
