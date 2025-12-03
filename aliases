@@ -25,3 +25,5 @@ alias ffk='pkill firefox'
 alias ksway='pkill sway'
 
 alias apkli='apk list --installed | grep'
+
+play() { yt-dlp -f bestaudio -g "ytsearch:$*" | xargs mpv --no-video; }
