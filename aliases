@@ -6,6 +6,7 @@ alias genpw="head /dev/urandom | tr -dc A-Za-z0-9 | head -c 21; echo"
 alias birth="stat /"
 # Practical alias
 alias sudo='doas ' 
+alias q='exit'
 alias clr='clear'
 alias cls='clr'
 alias ls='ls --color=auto'
