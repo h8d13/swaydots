@@ -1,14 +1,23 @@
 export PS1='\033[0;34m┌──[\033[0;36m\A\033[0;34m]─[\033[0;39m\u\033[0;34m@\033[0;36m\h\033[0;34m]─[\033[0;32m\w\033[0;34m]\n\033[0;34m└──╼ \033[0;36m$ \033[0m'
 export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:$PATH"
 
+
 alias ff='firefox about:blank &'
+alias ffk='pkill firefox'
+
 alias sudo='doas' 
+
 alias clr='clear'
 alias cls='clr'
+
 alias ls='ls --color=auto'
 alias ll='ls --color=auto -la -h'
 alias la='ls --color=auto -a'
 alias l='ls --color=auto -CF'
+
 alias grep='grep --color=auto'
 alias diff='diff --color=auto'
-alias apkli="apk list --installed | grep"
+
+alias apkli='apk list --installed | grep'
+
+alias ksway='pkill sway'

@@ -222,8 +222,6 @@ set $focus  #00e5ff
 set $urgent #ff0044
 set $border #333333
 
-# Borders
-default_border normal 2
 
 # Window colors: border background text indicator child_border
 client.focused          $focus  $bg $fg $focus  $focus
