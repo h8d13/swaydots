@@ -64,7 +64,7 @@ export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
 # Ctrl-T: Find files
 export FZF_CTRL_T_COMMAND='fd --type f --hidden --follow --exclude .git'
 
-# Disable Alt-C since it doesn't work in your setup
+# Disable Alt-C 
 export FZF_ALT_C_COMMAND='fd --type d --hidden --follow --exclude .git'
 
 # Ctrl-G go to folder
