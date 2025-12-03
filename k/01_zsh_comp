@@ -1,0 +1,4 @@
+#!/bin/bash
+if [ ! -d "$HOME/.config/zsh/zsh-completions" ]; then
+    git clone https://github.com/zsh-users/zsh-completions "$HOME/.config/zsh/zsh-completions"
+fi

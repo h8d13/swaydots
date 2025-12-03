@@ -1,0 +1,4 @@
+#!/bin/bash
+if ! grep -q '.config/bash/bashrc' "$HOME/.bashrc" 2>/dev/null; then
+    echo ". '$C_HOME/bash/bashrc'" >> "$HOME/.bashrc"
+fi

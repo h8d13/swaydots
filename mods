@@ -1,0 +1,10 @@
+#!/bin/bash
+# shellcheck disable=SC1091
+# shellcheck disable=SC1090
+K_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/k" && pwd)"
+. "$K_DIR/00_header"
+# Run numbered scripts in order (01_*, 02_*, etc.)
+for script in "$K_DIR"/[0-9]*; do
+    [ "$script" = "$K_DIR/00_header" ] && continue
+    [ -f "$script" ] && . "$script"
+done

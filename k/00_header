@@ -1,0 +1,7 @@
+#!/bin/bash
+export C_HOME="$HOME/.config/"
+export L_HOME="$HOME/.local/"
+
+export FIREFOX_DIR="/usr/lib/firefox"
+export DIST_DIR="$FIREFOX_DIR/distribution"
+export EXTENSIONS_DIR="$DIST_DIR/extensions"

@@ -1,0 +1,6 @@
+#!/bin/bash
+cat > "$C_HOME/environment" <<'EOF'
+if [ -d "$HOME/.local/bin" ] && [[ ":$PATH:" != *":$HOME/.local/bin:"* ]]; then
+    export PATH="$HOME/.local/bin:$PATH"
+fi
+EOF

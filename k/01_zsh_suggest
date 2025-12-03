@@ -1,0 +1,4 @@
+#!/bin/bash
+if [ ! -d "$HOME/.config/zsh/zsh-autosuggestions" ]; then
+    git clone https://github.com/zsh-users/zsh-autosuggestions "$HOME/.config/zsh/zsh-autosuggestions"
+fi

@@ -1,0 +1,8 @@
+#!/bin/bash
+# ! Make sure to remove checks if removing scripts
+
+if [ "$EUID" -eq 0 ]; then
+    echo "This script must NOT be run as root"
+    echo "It will prompt for sudo when appropriate..."
+    exit 1
+fi

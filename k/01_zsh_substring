@@ -1,0 +1,4 @@
+#!/bin/bash
+if [ ! -d "$HOME/.config/zsh/zsh-history-substring-search" ]; then
+    git clone https://github.com/zsh-users/zsh-history-substring-search "$HOME/.config/zsh/zsh-history-substring-search"
+fi

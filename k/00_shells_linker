@@ -1,0 +1,7 @@
+#!/bin/bash
+mkdir -p "$C_HOME/zsh/zshrc"
+mkdir -p "$C_HOME/bash/bashrc"
+cp ./examples/.zshrc.txt "$C_HOME/zsh/zshrc"
+cp ./examples/.bashrc.txt "$C_HOME/bash/bashrc"
+# shared aliases
+cp ./examples/aliases "$C_HOME/aliases"
