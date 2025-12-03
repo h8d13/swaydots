@@ -1,18 +1,3 @@
 export PS1="\[\e[34m\]┌──[\[\e[36m\]\A\[\e[34m\]]─[\[\e[39m\]\u\[\e[34m\]@\[\e[36m\]\h\[\e[34m\]]─[\[\e[32m\]\w\[\e[34m\]]\n\[\e[34m\]└──╼ \[\e[36m\]\$ \[\e[0m\]"
-
 export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:$PATH"
-
-
-alias sudo='doas' 
-
-alias clr='clear'
-alias cls='clr'
-
-alias ls='ls --color=auto'
-alias ll='ls --color=auto -la -h'
-alias la='ls --color=auto -a'
-alias l='ls --color=auto -CF'
-
-alias grep='grep --color=auto'
-alias diff='diff --color=auto'
 
