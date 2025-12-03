@@ -3,11 +3,15 @@
 my dot files for alpine sway high contrast dark theme
 no extra deps only built-in ash + bash/zsh
 
-`doas apk zsh zsh-vcs bash fd fzf`
+`doas apk add zsh zsh-vcs bash fd fzf`
+
+(Optional) File explorer
+
+`doas apk add thunar adwaita-icon-theme`
 
 (Optional) Terminal music
 
-`doas apk mpv yt-dlp`
+`doas apk add mpv yt-dlp`
 
 `play gesus8 house music`
 

@@ -1,8 +1,7 @@
-# Default config for sway
-#
-# Copy this to ~/.config/sway/config and edit it to your liking.
-#
+# h8d13's config for sway
 # Read `man 5 sway` for a complete reference.
+
+# Made for for alternate keyboards/OLED screens
 
 ### Variables
 #
@@ -222,7 +221,6 @@ set $focus  #00e5ff
 set $urgent #ff0044
 set $border #333333
 
-
 # Window colors: border background text indicator child_border
 client.focused          $focus  $bg $fg $focus  $focus
 client.unfocused        $border $bg $fg $border $border
@@ -235,7 +233,6 @@ output * bg #000000 solid_color
 gaps inner 10
 gaps outer 5
 smart_gaps on
-
 
 #
 # Status Bar:
