@@ -16,7 +16,7 @@ set $right l
 # Your preferred terminal emulator
 set $term foot
 # Your preferred application launcher
-set $menu wmenu-run
+set $menu wmenu-run -b -N "#000000" -n "#ffffff" -S "#222222" -s "#ffffff"
 
 ### Output configuration
 #
@@ -236,6 +236,9 @@ client.urgent           $urgent $bg $fg $urgent $urgent
 # Background (optional, can remove)
 output * bg #000000 solid_color
 
+gaps inner 10
+gaps outer 5
+smart_gaps on
 
 
 #
