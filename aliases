@@ -1,0 +1,27 @@
+alias comms="cat ~/.config/aliases | sed 's/alias//g'"
+alias ecomms="nano ~/.config/aliases"
+alias srcall=". ~/.config/aliases"
+# Utils alias
+alias genpw="head /dev/urandom | tr -dc A-Za-z0-9 | head -c 21; echo"
+alias birth="stat /"
+# Practical alias
+alias sudo='doas ' 
+alias clr='clear'
+alias cls='clr'
+alias ls='ls --color=auto'
+alias ll='ls --color=auto -la -h'
+alias la='ls --color=auto -a'
+alias l='ls --color=auto -CF'
+alias grep='grep --color=auto'
+alias diff='diff --color=auto'
+alias logds='dmesg --color=auto'
+# Save me alias
+alias rm='rm -I'
+alias rmrf='rm -rf -I'
+
+
+alias ff='firefox about:blank &'
+alias ffk='pkill firefox'
+alias ksway='pkill sway'
+
+alias apkli='apk list --installed | grep'

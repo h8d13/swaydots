@@ -3,7 +3,7 @@
 my dot files for alpine sway high contrast dark theme
 no extra deps only built-in ash + bash/zsh
 
-`doas apk add zsh zsh-vcs bash`
+`doas apk add zsh zsh-vcs bash fd fzf`
 
 styles made for OLED screens, long coding sessions and least amount of flashy colors possible
 

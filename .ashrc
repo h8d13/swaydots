@@ -3,9 +3,6 @@ export PS1="\[\e[34m\]┌──[\[\e[36m\]\A\[\e[34m\]]─[\[\e[39m\]\u\[\e[34m\
 export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:$PATH"
 
 
-alias ff='firefox about:blank &'
-alias ffk='pkill firefox'
-
 alias sudo='doas' 
 
 alias clr='clear'
@@ -19,6 +16,3 @@ alias l='ls --color=auto -CF'
 alias grep='grep --color=auto'
 alias diff='diff --color=auto'
 
-alias apkli='apk list --installed | grep'
-
-alias ksway='pkill sway'
