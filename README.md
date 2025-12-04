@@ -27,5 +27,7 @@ using a linker to be able to dynamically edit git repo which updates the actual 
 
 <img width="1920" height="1080" alt="20251203_16h38m29s_grim" src="https://github.com/user-attachments/assets/2195b7d6-ec06-4a02-a97f-fb3d1c5411d6" />
 
+<img width="1920" height="1080" alt="20251204_05h01m58s_grim" src="https://github.com/user-attachments/assets/df108675-1ffa-4c39-b783-c5ddaa83308b" />
+
 ----
 
