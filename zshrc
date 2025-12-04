@@ -28,6 +28,9 @@ setopt HIST_VERIFY 			# Show command after history expansion before running
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=#777'
 # Load autosuggestions from ~/.config/zsh/
 ZSH_CONFIG_DIR="$HOME/.config/zsh"
+# Source aliases and environment
+[ -f "$HOME/.config/aliases" ] && . "$HOME/.config/aliases"
+[ -f "$HOME/.config/environment" ] && . "$HOME/.config/environment"
 plugin_file="$ZSH_CONFIG_DIR/zsh-autosuggestions/zsh-autosuggestions.zsh"
 [ -f "$plugin_file" ] && . "$plugin_file"
 # Ensure autosuggestions start
@@ -47,9 +50,6 @@ precmd() { vcs_info }
 # Prompt
 PROMPT='%F{red}┌──[%F{cyan}%D{%H:%M}%F{red}]─[%F{default}%n%F{red}@%F{cyan}%m%F{red}]─[%F{green}%~%F{red}]${vcs_info_msg_0_}$(venv_prompt)
 %F{red}└──╼ %F{cyan}$ %f'
-# Source aliases and environment
-[ -f "$HOME/.config/aliases" ] && . "$HOME/.config/aliases"
-[ -f "$HOME/.config/environment" ] && . "$HOME/.config/environment"
 # create a zkbd compatible hash
 typeset -g -A key
 # begin/end of buffer
@@ -82,22 +82,23 @@ if (( ${+terminfo[smkx]} && ${+terminfo[rmkx]} )); then
 fi
 # other kbinds alt +  h for help of current command or esc + h
 # fzf options
-export FZF_DEFAULT_OPTS='--height 50%'
-# Default command for fzf
+# Force Ctrl-T to use reverse layout (prompt at bottom)
+# fzf options - MUST be set BEFORE sourcing key-bindings
+export FZF_DEFAULT_OPTS='--layout=reverse-list --height 50% --prompt=" ➜ "'
 export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow'
-# Ctrl-T: Find files
 export FZF_CTRL_T_COMMAND='fd --type f --hidden --follow'
-# Disable Alt-C and set it to move to folders 
 export FZF_ALT_C_COMMAND='fd --type d --hidden --follow'
-# Ctrl-G go to folder
+
+# Ctrl-G go to folder (with explicit reverse layout)
 fzf-cd-widget() {
   local dir
-  dir=$(fd --type d --hidden --follow --exclude .git 2>/dev/null | fzf +m) && cd "$dir"
+  dir=$(fd --type d --hidden --follow --exclude .git 2>/dev/null | fzf --layout=reverse +m) && cd "$dir"
   zle reset-prompt
 }
 zle -N fzf-cd-widget
 bindkey '^G' fzf-cd-widget
-# Note needs to be sourced after defining ^^
+
+# Source fzf key bindings AFTER setting options
 if [ -f /usr/share/fzf/key-bindings.zsh ]; then
   source /usr/share/fzf/key-bindings.zsh
 fi
