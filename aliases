@@ -25,11 +25,13 @@ alias apkli='apk list --installed | grep --color=auto'
 # requires elev
 
 # set cable down and connect to arg1 SSID and generate ip
+# example: cwifi "mynetwork" prompts for password if unkown
+
 cwifi() {
     doas ip link set eth0 down && nmcli d wifi c "$1" -a && doas udhcpc -i wlan0
 }
 
-# set cable back up
+# set cable back up remove wlan and get ip
 ccable() {
     doas ip link set eth0 up && doas ip link set wlan0 down && doas udhcpc -i eth0
 }
