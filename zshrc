@@ -5,13 +5,25 @@ venv_prompt() {
   local name=${VIRTUAL_ENV:t}
   echo -n "─%F{red}[%F{green}$name%F{red}]%f"
 }
+# auto cd if type dir 
+setopt AUTO_CD
 # Completion init
 autoload -Uz compinit && compinit
+zstyle ':completion:*' completer _complete _match _approximate
+zstyle ':completion:*:match:*' original only
+zstyle ':completion:*:approximate:*' max-errors 1 numeric
+zstyle ':completion:*' use-cache on
+zstyle ':completion:*' cache-path ~/.zsh/cache
+zstyle ':completion:*:cd:*' ignore-parents parent pwd
 zstyle ':completion:*' menu select
 # History
-HISTSIZE=10000
-SAVEHIST=10000
+HISTSIZE=10000				# Max entires in session
+SAVEHIST=10000				# Max entries in file
 HISTFILE="$HOME/.zsh_history"
+setopt SHARE_HISTORY		# Share across sessions
+setopt HIST_IGNORE_DUPS     # Don't record duplicates
+setopt HIST_FIND_NO_DUPS    # Don't show duplicates when searching
+setopt HIST_VERIFY 			# Show command after history expansion before running
 # Grayed out difference when is suggestion
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=#777'
 # Load autosuggestions from ~/.config/zsh/
@@ -103,6 +115,8 @@ key[Control-Left]="${terminfo[kLFT5]}"
 key[Control-Right]="${terminfo[kRIT5]}"
 [[ -n "${key[Control-Left]}"  ]] && bindkey -- "${key[Control-Left]}"  backward-word
 [[ -n "${key[Control-Right]}" ]] && bindkey -- "${key[Control-Right]}" forward-word
+# alt-enter mutli-line
+bindkey '^[^M' self-insert-unmeta  
 # cd - alternative alt + left but remember stacks
 # Make cd push to directory stack automatically
 # Make cd push to directory stack automatically
@@ -116,8 +130,31 @@ cdUndoKey() {
 }
 zle -N cdUndoKey
 bindkey '^[[1;3D' cdUndoKey
+# dot ration
+# Smart dot expansion: cd ..../dir → cd ../../../dir
+rationalise-dot() {
+  if [[ $LBUFFER = *.. ]]; then
+    LBUFFER+=/..
+  else
+    LBUFFER+=.
+  fi
+}
+zle -N rationalise-dot
+bindkey . rationalise-dot
+
 # Syntax highlighting (MUST be at the end)
 plugin_file="$ZSH_CONFIG_DIR/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 [ -f "$plugin_file" ] && . "$plugin_file"
 # find new executable completions
 zstyle ':completion:*' rehash true
+# global zsh alias
+alias -g L='| less'
+alias -g G='| grep --color=auto'
+# sometimes 
+alias -g T='| tail'
+alias -g H='| head'
+alias -g C='| wc -l'
+# null/err
+alias -g NE='2> /dev/null'
+alias -g NUL='> /dev/null 2>&1'
+
