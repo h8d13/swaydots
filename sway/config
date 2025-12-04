@@ -1,6 +1,4 @@
 # h8d13's config for sway
-# Read `man 5 sway` for a complete reference.
-
 # Made for for alternate keyboards/OLED screens
 
 ### Variables
@@ -45,20 +43,14 @@ output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
 input type:keyboard {
 	xkb_layout "be"
 }
-#
-# Example configuration:
-#
+
 input type:touchpad {
 	dwt enabled
     tap enabled
     natural_scroll enabled
     middle_emulation enabled
 }
-#
-#   input type:keyboard {
-#       xkb_layout "eu"
-#   }
-#
+
 # You can also configure each device individually.
 # Read `man 5 sway-input` for more information about this section.
 
@@ -68,6 +60,8 @@ input type:touchpad {
 #
     # Start a terminal
     bindsym $mod+Return exec $term --login
+    # Start a zsh terminal when im tired
+	bindsym $mod+Shift+Return exec $term zsh --login
 
     # Kill focused window
     bindsym $mod+Shift+q kill
@@ -84,6 +78,8 @@ input type:touchpad {
 
     # Reload the configuration file
     bindsym $mod+Shift+c reload
+
+ 	# Super useful but major changes restart sway
 
     # Exit sway (logs you out of your Wayland session)
     bindsym $mod+Shift+e exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -B 'Yes, exit sway' 'swaymsg exit'
@@ -113,7 +109,7 @@ input type:touchpad {
     bindsym $mod+Shift+Right move right
 #
 # Workspaces:
-	# Use keycodes instead of keysyms (fixes AZERTY number row)
+	# Use keycodes directly instead of keysyms (fixes non-US kb-layouts)
 	bindcode $mod+10 workspace number 1
 	bindcode $mod+11 workspace number 2
 	bindcode $mod+12 workspace number 3
@@ -236,13 +232,11 @@ smart_gaps on
 
 #
 # Status Bar:
-#
-# Read `man 5 sway-bar` for more information about this section.
+# No fancy waybar or anything needed just uses system internals see 'status.sh'
 bar {
     position bottom
 
-    # When the status_command prints a new line to stdout, swaybar updates.
-    # The default just shows the current date and time.
+	# Update 10 times per minute
     status_command while ~/.config/sway/status.sh; do sleep 6; done
     
     colors {
