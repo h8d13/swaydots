@@ -5,6 +5,10 @@ no extra deps only built-in ash + bash/zsh
 
 `doas apk add zsh zsh-vcs bash fd fzf`
 
+(Optional) Man pages
+
+`doas apk add mandoc man-pages mandoc-apropos less less-doc`
+
 (Optional) File explorer
 
 `doas apk add thunar adwaita-icon-theme`
@@ -13,7 +17,7 @@ no extra deps only built-in ash + bash/zsh
 
 `doas apk add mpv yt-dlp`
 
-`play gesus8 house music`
+`play darude sandstorm`
 
 ----
 
