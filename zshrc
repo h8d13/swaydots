@@ -82,13 +82,13 @@ if (( ${+terminfo[smkx]} && ${+terminfo[rmkx]} )); then
 fi
 # other kbinds alt +  h for help of current command or esc + h
 # fzf options
-export FZF_DEFAULT_OPTS='--height 40% --layout=reverse'
+export FZF_DEFAULT_OPTS='--height 50%'
 # Default command for fzf
-export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git --exclude .cache'
+export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow'
 # Ctrl-T: Find files
-export FZF_CTRL_T_COMMAND='fd --type f --hidden --follow --exclude .git --exclude .cache'
+export FZF_CTRL_T_COMMAND='fd --type f --hidden --follow'
 # Disable Alt-C and set it to move to folders 
-export FZF_ALT_C_COMMAND='fd --type d --hidden --follow --exclude .git --exclude .cache'
+export FZF_ALT_C_COMMAND='fd --type d --hidden --follow'
 # Ctrl-G go to folder
 fzf-cd-widget() {
   local dir

@@ -1,0 +1,8 @@
+# ~/.fdignore
+.git
+.cache
+.mozilla
+__pycache__
+*.pyc
+.venv
+venv
