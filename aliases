@@ -16,12 +16,17 @@ alias l='ls --color=auto -CF'
 alias ip='ip -color=auto'
 alias grep='grep --color=auto'
 alias diff='diff --color=auto'
-alias logds='dmesg --color=auto'
 
 alias ff='firefox about:blank &'
 alias ffk='pkill firefox'
 alias ksway='pkill sway'
 
-alias apkli='apk list --installed | grep'
+alias apkli='apk list --installed | grep --color=auto'
 
 play() { yt-dlp -f bestaudio -g "ytsearch:$*" | xargs mpv --no-video; }
+playv() {
+  local urls=$(yt-dlp -f "bestvideo[height<=1080]+bestaudio" -g "ytsearch:$*")
+  local video=$(echo "$urls" | sed -n 1p)
+  local audio=$(echo "$urls" | sed -n 2p)
+  mpv "$video" --audio-file="$audio"
+}

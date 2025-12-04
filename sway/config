@@ -62,7 +62,9 @@ input type:touchpad {
     bindsym $mod+Return exec $term --login
     # Start a zsh terminal when im tired
 	bindsym $mod+Shift+Return exec $term zsh --login
-
+	# Start bottom ressource monitor
+	bindsym $mod+m exec $term btm
+	
     # Kill focused window
     bindsym $mod+Shift+q kill
 
