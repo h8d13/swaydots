@@ -84,11 +84,11 @@ fi
 # fzf options
 export FZF_DEFAULT_OPTS='--height 40% --layout=reverse'
 # Default command for fzf
-export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
+export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git --exclude .cache'
 # Ctrl-T: Find files
-export FZF_CTRL_T_COMMAND='fd --type f --hidden --follow --exclude .git'
+export FZF_CTRL_T_COMMAND='fd --type f --hidden --follow --exclude .git --exclude .cache'
 # Disable Alt-C and set it to move to folders 
-export FZF_ALT_C_COMMAND='fd --type d --hidden --follow --exclude .git'
+export FZF_ALT_C_COMMAND='fd --type d --hidden --follow --exclude .git --exclude .cache'
 # Ctrl-G go to folder
 fzf-cd-widget() {
   local dir
@@ -123,7 +123,7 @@ bindkey '^[^M' self-insert-unmeta
 setopt AUTO_PUSHD           # Make cd push old directory onto stack
 setopt PUSHD_IGNORE_DUPS    # Don't push duplicates
 setopt PUSHD_SILENT         # Don't print stack after pushd/popd
-
+# alt + left remember stack
 cdUndoKey() {
   popd > /dev/null 2>&1
   zle reset-prompt
@@ -141,7 +141,6 @@ rationalise-dot() {
 }
 zle -N rationalise-dot
 bindkey . rationalise-dot
-
 # Syntax highlighting (MUST be at the end)
 plugin_file="$ZSH_CONFIG_DIR/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 [ -f "$plugin_file" ] && . "$plugin_file"
@@ -157,4 +156,3 @@ alias -g C='| wc -l'
 # null/err
 alias -g NE='2> /dev/null'
 alias -g NUL='> /dev/null 2>&1'
-
