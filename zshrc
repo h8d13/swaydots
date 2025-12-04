@@ -75,7 +75,7 @@ export FZF_DEFAULT_OPTS='--height 40% --layout=reverse'
 export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
 # Ctrl-T: Find files
 export FZF_CTRL_T_COMMAND='fd --type f --hidden --follow --exclude .git'
-# Disable Alt-C 
+# Disable Alt-C and set it to move to folders 
 export FZF_ALT_C_COMMAND='fd --type d --hidden --follow --exclude .git'
 # Ctrl-G go to folder
 fzf-cd-widget() {
@@ -103,6 +103,21 @@ key[Control-Left]="${terminfo[kLFT5]}"
 key[Control-Right]="${terminfo[kRIT5]}"
 [[ -n "${key[Control-Left]}"  ]] && bindkey -- "${key[Control-Left]}"  backward-word
 [[ -n "${key[Control-Right]}" ]] && bindkey -- "${key[Control-Right]}" forward-word
+# cd - alternative alt + left but remember stacks
+# Make cd push to directory stack automatically
+# Make cd push to directory stack automatically
+setopt AUTO_PUSHD           # Make cd push old directory onto stack
+setopt PUSHD_IGNORE_DUPS    # Don't push duplicates
+setopt PUSHD_SILENT         # Don't print stack after pushd/popd
+
+cdUndoKey() {
+  popd > /dev/null 2>&1
+  zle reset-prompt
+}
+zle -N cdUndoKey
+bindkey '^[[1;3D' cdUndoKey
 # Syntax highlighting (MUST be at the end)
 plugin_file="$ZSH_CONFIG_DIR/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 [ -f "$plugin_file" ] && . "$plugin_file"
+# find new executable completions
+zstyle ':completion:*' rehash true
