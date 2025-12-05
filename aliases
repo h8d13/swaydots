@@ -37,6 +37,5 @@ ccable() {
 
 play() { yt-dlp -f bestaudio -g "ytsearch:$*" | xargs mpv --no-video; }
 playv() {
-  local url=$(yt-dlp -f "bestvideo[height<=1080]+bestaudio/best[height<=1080]" -g "ytsearch:$*" | head -n 1)
-  mpv "$url"
+  yt-dlp -f "best[height<=1080]" -g "ytsearch:$*" | xargs mpv
 }
