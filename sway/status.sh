@@ -31,40 +31,6 @@ fi
 
 echo "$cpu_now_total $cpu_now_idle" > "$cpu_cache"
 
-# Read current byte counts and timestamp
-rx_now=$(cat /sys/class/net/$interface/statistics/rx_bytes)
-tx_now=$(cat /sys/class/net/$interface/statistics/tx_bytes)
-time_now=$(date +%s)
-
-# Cache file for storing previous values
-cache_file="/tmp/net_stats_$interface"
-
-# Read previous values if cache exists
-if [[ -f "$cache_file" ]]; then
-    read rx_prev tx_prev time_prev < "$cache_file"
-    time_diff=$((time_now - time_prev))
-
-    # Calculate bytes per second (avoid division by zero)
-    if [[ $time_diff -gt 0 ]]; then
-        rx_rate=$(((rx_now - rx_prev) / time_diff))
-        tx_rate=$(((tx_now - tx_prev) / time_diff))
-    else
-        rx_rate=0
-        tx_rate=0
-    fi
-
-    # Format human-readable rates using numfmt
-    rx_human=$(numfmt --to=iec <<< "$rx_rate")
-    tx_human=$(numfmt --to=iec <<< "$tx_rate")
-else
-    # First run, no previous data
-    rx_human="0"
-    tx_human="0"
-fi
-
-# Store current values for next run
-echo "$rx_now $tx_now $time_now" > "$cache_file"
-
 # Battery status (only if laptop)
 bat_status=""
 if [[ -d /sys/class/power_supply/BAT0 ]] || [[ -d /sys/class/power_supply/BAT1 ]]; then
@@ -77,4 +43,4 @@ if [[ -d /sys/class/power_supply/BAT0 ]] || [[ -d /sys/class/power_supply/BAT1 ]
     fi
 fi
 
-echo "USR: $USER | UP: $uptime | DT: $dt | LOAD: $load_avg | PSC: $procs | RAM: $ram_use | CPU: $cpu_use | NET: ↑$tx_total ↓$rx_total - ↑${tx_human}/s ↓${rx_human}/s${bat_status}"
+echo "USR: $USER | UP: $uptime | DT: $dt | LOAD: $load_avg | PSC: $procs | RAM: $ram_use | CPU: $cpu_use | NET: ↑$tx_total ↓$rx_total${bat_status} "
