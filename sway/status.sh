@@ -9,6 +9,21 @@ uptime=$(awk '{days=int($1/86400); hours=int(($1%86400)/3600); mins=int(($1%3600
 tx_total=$(numfmt --to=iec < /sys/class/net/$interface/statistics/tx_bytes)
 rx_total=$(numfmt --to=iec < /sys/class/net/$interface/statistics/rx_bytes)
 
+# Connection status (wifi signal or ethernet speed)
+if [[ -d /sys/class/net/$interface/wireless ]]; then
+    # Wireless interface - show signal quality
+    wifi_quality=$(awk 'NR==3 {print int($3 * 100 / 70)"%"}' /proc/net/wireless 2>/dev/null)
+    conn_status="WIFI: ${wifi_quality}"
+else
+    # Wired interface - show link speed
+    link_speed=$(cat /sys/class/net/$interface/speed 2>/dev/null)
+    if [[ -n "$link_speed" && "$link_speed" != "-1" ]]; then
+        conn_status="ETH: ${link_speed}Mb"
+    else
+        conn_status="ETH"
+    fi
+fi
+
 # CPU calculation - need to sample twice to get accurate percentage
 cpu_cache="/tmp/cpu_stats"
 read user nice system idle iowait irq softirq < <(awk '/^cpu / {print $2,$3,$4,$5,$6,$7,$8}' /proc/stat)
@@ -43,4 +58,4 @@ if [[ -d /sys/class/power_supply/BAT0 ]] || [[ -d /sys/class/power_supply/BAT1 ]
     fi
 fi
 
-echo "USR: $USER | UP: $uptime | DT: $dt | LOAD: $load_avg | PSC: $procs | RAM: $ram_use | CPU: $cpu_use | NET: ↑$tx_total ↓$rx_total${bat_status} "
+echo "USR: $USER | UP: $uptime | DT: $dt | LOAD: $load_avg | PSC: $procs | RAM: $ram_use | CPU: $cpu_use | $conn_status | NET: ↑$tx_total ↓$rx_total${bat_status} "
