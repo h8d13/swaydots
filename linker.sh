@@ -3,6 +3,7 @@
 mkdir -p ~/.config/bash
 mkdir -p ~/.config/zsh
 mkdir -p ~/.config/sway
+mkdir -p ~/.config/foot
 
 doas rm -f /etc/environment
 rm -f ~/.config/sway/config
