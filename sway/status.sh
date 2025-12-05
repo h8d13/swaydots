@@ -54,7 +54,7 @@ if [[ -d /sys/class/power_supply/BAT0 ]] || [[ -d /sys/class/power_supply/BAT1 ]
     if [[ "$bat_state" == "Charging" ]]; then
         bat_status=" | BAT: ${bat_cap}%↑"
     else
-        bat_status=" | BAT: ${bat_cap}%"
+        bat_status=" | BAT: ${bat_cap}%↓"
     fi
 fi
 
