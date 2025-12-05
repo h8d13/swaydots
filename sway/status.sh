@@ -1,11 +1,80 @@
 #!/usr/bin/env bash
-
 interface=$(ip -o -4 route show to default | awk '{print $5}')
 procs=$(ls /proc | grep -E '^[0-9]+$' | wc -l)
-dt=$(date +'%Y-%m-%d-%H:%M')
+dt=$(date +'%m-%d-%H:%M')
 ram_use=$(free -h | awk '/Mem:/ {print $3 "/" $2}')
-cpu_use=$(awk '/^cpu / {printf("%.1f%%", ($2+$4)*100/($2+$4+$5))}' /proc/stat)
-tx=$(numfmt --to=iec < /sys/class/net/$interface/statistics/tx_bytes)
-rx=$(numfmt --to=iec < /sys/class/net/$interface/statistics/rx_bytes)
+load_avg=$(awk '{print $1}' /proc/loadavg)
+# BusyBox-compatible uptime - read from /proc/uptime
+uptime=$(awk '{days=int($1/86400); hours=int(($1%86400)/3600); mins=int(($1%3600)/60); if(days>0) printf "%dd %dh", days, hours; else if(hours>0) printf "%dh %dm", hours, mins; else printf "%dm", mins}' /proc/uptime)
+tx_total=$(numfmt --to=iec < /sys/class/net/$interface/statistics/tx_bytes)
+rx_total=$(numfmt --to=iec < /sys/class/net/$interface/statistics/rx_bytes)
 
-echo "USR: $USER | DT: $dt | PSC: $procs | RAM: $ram_use | CPU: $cpu_use | NET: ↑$tx ↓$rx "
+# CPU calculation - need to sample twice to get accurate percentage
+cpu_cache="/tmp/cpu_stats"
+read user nice system idle iowait irq softirq < <(awk '/^cpu / {print $2,$3,$4,$5,$6,$7,$8}' /proc/stat)
+cpu_now_total=$((user + nice + system + idle + iowait + irq + softirq))
+cpu_now_idle=$idle
+
+if [[ -f "$cpu_cache" ]]; then
+    read cpu_prev_total cpu_prev_idle < "$cpu_cache"
+    cpu_total_diff=$((cpu_now_total - cpu_prev_total))
+    cpu_idle_diff=$((cpu_now_idle - cpu_prev_idle))
+
+    if [[ $cpu_total_diff -gt 0 ]]; then
+        cpu_use=$(awk "BEGIN {printf \"%.1f%%\", (($cpu_total_diff - $cpu_idle_diff) / $cpu_total_diff) * 100}")
+    else
+        cpu_use="0.0%"
+    fi
+else
+    cpu_use="0.0%"
+fi
+
+echo "$cpu_now_total $cpu_now_idle" > "$cpu_cache"
+
+# Read current byte counts and timestamp
+rx_now=$(cat /sys/class/net/$interface/statistics/rx_bytes)
+tx_now=$(cat /sys/class/net/$interface/statistics/tx_bytes)
+time_now=$(date +%s)
+
+# Cache file for storing previous values
+cache_file="/tmp/net_stats_$interface"
+
+# Read previous values if cache exists
+if [[ -f "$cache_file" ]]; then
+    read rx_prev tx_prev time_prev < "$cache_file"
+    time_diff=$((time_now - time_prev))
+
+    # Calculate bytes per second (avoid division by zero)
+    if [[ $time_diff -gt 0 ]]; then
+        rx_rate=$(((rx_now - rx_prev) / time_diff))
+        tx_rate=$(((tx_now - tx_prev) / time_diff))
+    else
+        rx_rate=0
+        tx_rate=0
+    fi
+
+    # Format human-readable rates using numfmt
+    rx_human=$(numfmt --to=iec <<< "$rx_rate")
+    tx_human=$(numfmt --to=iec <<< "$tx_rate")
+else
+    # First run, no previous data
+    rx_human="0"
+    tx_human="0"
+fi
+
+# Store current values for next run
+echo "$rx_now $tx_now $time_now" > "$cache_file"
+
+# Battery status (only if laptop)
+bat_status=""
+if [[ -d /sys/class/power_supply/BAT0 ]] || [[ -d /sys/class/power_supply/BAT1 ]]; then
+    bat_cap=$(cat /sys/class/power_supply/BAT*/capacity 2>/dev/null | head -1)
+    bat_state=$(cat /sys/class/power_supply/BAT*/status 2>/dev/null | head -1)
+    if [[ "$bat_state" == "Charging" ]]; then
+        bat_status=" | BAT: ${bat_cap}%↑"
+    else
+        bat_status=" | BAT: ${bat_cap}%"
+    fi
+fi
+
+echo "USR: $USER | UP: $uptime | DT: $dt | LOAD: $load_avg | PSC: $procs | RAM: $ram_use | CPU: $cpu_use | NET: ↑$tx_total ↓$rx_total - ↑${tx_human}/s ↓${rx_human}/s${bat_status}"
