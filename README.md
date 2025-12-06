@@ -30,11 +30,15 @@ Video: `playv never gonna give you up`
 
 Binds are set to work with alsa which I've found easy to use.
 
-## Qcalc 
+## Terminal calc 
 
 `doas apk add qcalc`
 
 My laptop had a media key for this
+
+## Terminal editor
+
+`doas apk add micro`
 
 ----
 
