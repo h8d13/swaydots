@@ -13,7 +13,7 @@ Also setup less pager coloring.
 
 You can then `apk add <something>-doc` and `man <something>`.
 
-(Optional) File explorer
+## File explorer
 
 `doas apk add thunar adwaita-icon-theme`
 
@@ -21,7 +21,7 @@ You can then `apk add <something>-doc` and `man <something>`.
 
 `doas apk add qutebrowser upower`
 
-## Terminal music
+## Terminal media
 
 `doas apk add mpv yt-dlp`
 
