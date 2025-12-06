@@ -16,13 +16,16 @@ alias l='ls --color=auto -CF'
 alias grep='grep --color=auto'
 alias diff='diff --color=auto'
 
+alias backbus='dbus-daemon --session --address=unix:path=$XDG_RUNTIME_DIR/bus'
 alias ff='firefox about:blank &'
-alias ffk='pkill firefox'
+alias qb='qutebrowser'
+
 alias ksway='pkill sway'
 
 alias apkli='apk list --installed | grep --color=auto'
-# requires elev
 
+
+# requires elev
 # set cable down and connect to arg1 SSID and generate ip
 # example: cwifi "mynetwork" prompts for password if unkown
 
@@ -35,6 +38,7 @@ ccable() {
     doas ip link set eth0 up && doas ip link set wlan0 down && doas udhcpc -i eth0
 }
 
+# media
 play() { yt-dlp -f bestaudio -g "ytsearch:$*" | xargs mpv --no-video; }
 playv() {
   yt-dlp -f "best[height<=1080]" -g "ytsearch:$*" | xargs mpv

@@ -1,5 +1,5 @@
 # h8d13's config for sway
-# Made for for alternate keyboards/OLED screens
+# Made for for alternate keyboards/OLED screens/laptops
 
 ### Variables
 #
@@ -198,16 +198,33 @@ bindsym $mod+r mode "resize"
 #
 # Utilities:
 #
-    # Special keys to adjust volume via PulseAudio
-    bindsym --locked XF86AudioMute exec pactl set-sink-mute \@DEFAULT_SINK@ toggle
-    bindsym --locked XF86AudioLowerVolume exec pactl set-sink-volume \@DEFAULT_SINK@ -5%
-    bindsym --locked XF86AudioRaiseVolume exec pactl set-sink-volume \@DEFAULT_SINK@ +5%
-    bindsym --locked XF86AudioMicMute exec pactl set-source-mute \@DEFAULT_SOURCE@ toggle
+    # Special keys to adjust volume via ALSA
+    bindsym --locked XF86AudioMute exec amixer set Master toggle
+    bindsym --locked XF86AudioLowerVolume exec amixer set Master 5%-
+    bindsym --locked XF86AudioRaiseVolume exec amixer set Master 5%+
+    bindsym --locked XF86AudioMicMute exec amixer set Capture toggle
+
     # Special keys to adjust brightness via brightnessctl
     bindsym --locked XF86MonBrightnessDown exec brightnessctl set 5%-
     bindsym --locked XF86MonBrightnessUp exec brightnessctl set 5%+
+
     # Special key to take a screenshot with grim
     bindsym Print exec grim
+
+    # Calculator key to launch terminal calculator
+    bindsym XF86Calculator exec $term -e qalc
+
+    # F9 key to toggle floating mode
+    bindsym F9 floating toggle
+	# $mod+r to resize windows
+	# $mod+Shift to move them
+	# can set a window always floating
+	# $mod + Space with switch between floating focus and tiling
+	# for_window [app_id="anapp"] 
+
+	# Send something scracthpad
+	# $mod+minus or with shift sends things away
+	# $mid+Shift+Space to bring them back
 
 
 ### Theme
