@@ -80,7 +80,6 @@ input type:touchpad {
 
     # Reload the configuration file
     bindsym $mod+Shift+c reload
-
  	# Super useful but major changes restart sway
 
     # Exit sway (logs you out of your Wayland session)
