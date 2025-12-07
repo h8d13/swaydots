@@ -37,6 +37,10 @@ output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
 # your displays after another 300 seconds, and turn your screens back on when
 # resumed. It will also lock your screen before your computer goes to sleep.
 
+### Services
+# Notification daemon
+exec mako
+
 ### Input configuration
 
 input type:keyboard {
@@ -213,6 +217,9 @@ bindsym $mod+r mode "resize"
     # Calculator key to launch terminal calculator
     bindsym XF86Calculator exec $term -e qalc
 
+    # Check for updates and show notification
+    bindsym $mod+u exec notify-send "Updates" "$(apk list --upgradable | wc -l) updates available"
+
     # F9 key to toggle floating mode
     bindsym F9 floating toggle
 	# $mod+r to resize windows
@@ -229,6 +236,10 @@ bindsym $mod+r mode "resize"
 ### Theme
 # Toggle between dark and light themes with $mod+t
 bindsym $mod+t exec ~/.config/sway/toggle-colors.sh
+
+# Uncomment to disable title bars and use thin borders (more screen space, snappier)
+# default_border pixel 2
+# default_floating_border pixel 2
 
 gaps inner 10
 gaps outer 5
