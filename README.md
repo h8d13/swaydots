@@ -57,7 +57,9 @@ this follows runit patterns where all symlinks are from a single location being 
 
 ----
 
-## Shortcuts Cheatsheet (in order of how frequently I use):
+## Shortcuts Cheatsheet:
+
+> In order of how frequently I use
 
 ```
 1. **Mod+Shift+Enter** 		# Open zsh
