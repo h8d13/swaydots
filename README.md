@@ -69,4 +69,5 @@ this follows runit patterns where all symlinks are from a single location being 
 5. **Mod+X** 				# Switch to a workspace
 6. **Mod+Shift+X**			# Move something to a workspace
 7. **Mod+Shift+Space**      # Make a window floaty F9 works too 
+8. **Mod+M** 				# Opens bottom monitor
 ```
