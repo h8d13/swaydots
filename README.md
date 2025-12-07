@@ -3,13 +3,13 @@
 my dot files for alpine sway high contrast dark theme
 no extra deps only built-in ash + bash/zsh (fresh alpine install)
 
-`doas apk add zsh zsh-vcs bash fd fzf bottom`
+`doas apk add zsh zsh-vcs bash fd fzf grep diffutils iproute2 bottom`
 
 ## Man pages
 
 Also setup less pager coloring. 
 
-`doas apk add mandoc man-pages mandoc-apropos less less`
+`doas apk add mandoc man-pages mandoc-apropos less`
 
 You can then `apk add <something>-doc` and `man <something>`.
 

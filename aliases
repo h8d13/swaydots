@@ -15,6 +15,7 @@ alias la='ls --color=auto -a'
 alias l='ls --color=auto -CF'
 alias grep='grep --color=auto'
 alias diff='diff --color=auto'
+alias ip='ip --color=auto'
 
 alias backbus='dbus-daemon --session --address=unix:path=$XDG_RUNTIME_DIR/bus'
 alias ff='firefox about:blank &'
@@ -39,7 +40,9 @@ ccable() {
 }
 
 # media
-play() { yt-dlp -f bestaudio -g "ytsearch:$*" | xargs mpv --no-video; }
+play() {
+	yt-dlp -f bestaudio -g "ytsearch${2:-10}:$1" | xargs mpv --no-video;
+}
 playv() {
   yt-dlp -f "best[height<=1080]" -g "ytsearch:$*" | xargs mpv
 }
