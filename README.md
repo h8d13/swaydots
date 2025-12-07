@@ -5,6 +5,10 @@ no extra deps only built-in ash + bash/zsh (fresh alpine install)
 
 `doas apk add zsh zsh-vcs bash fd fzf grep diffutils iproute2 bottom`
 
+## Cursors
+
+`doas apk add cursors-breeze`
+
 ## Man pages
 
 Also setup less pager coloring. 
