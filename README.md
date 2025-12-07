@@ -60,10 +60,12 @@ this follows runit patterns where all symlinks are from a single location being 
 ## Shortcuts Cheatsheet (in order of how frequently I use):
 
 ```
-1. **Mod+Shift+Enter** 		- Open zsh
-2. **Mod+Shift+Q** 			- Close something focused
-3. **Ctrl+Shift+R**			- Search inside foot term session
+1. **Mod+Shift+Enter** 		# Open zsh
+2. **Mod+Shift+Q** 			# Close something focused
+3. **Ctrl+Shift+R**			# Search inside foot term session
 ---> Ctrl N or P next/previous matches
-4. **Ctrl+F**<term> ENTER   - Inside micro editor to search
+4. **Ctrl+F**<term> ENTER   # Inside micro editor to search
 ---> Ctrl N or P next/previous matches
+5. **Mod+X** 				# Switch to a workspace
+6. **Mod+Shift+X**			# Move something to a workspace
 ```
