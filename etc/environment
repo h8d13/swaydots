@@ -3,5 +3,6 @@
 #
 # Syntax: simple "KEY=VAL" pairs on separate lines
 #
+##### Something
 EDITOR=nano
 GTK_THEME=Adwaita:dark
