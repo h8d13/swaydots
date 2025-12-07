@@ -21,3 +21,5 @@ ln -s ~/swaydots/profile ~/.profile
 ln -s ~/swaydots/ashrc ~/.ashrc
 ln -s ~/swaydots/bashrc ~/.config/bash/bashrc
 ln -s ~/swaydots/zshrc ~/.config/zsh/zshrc
+
+./mods
