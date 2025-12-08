@@ -220,6 +220,8 @@ bindsym $mod+r mode "resize"
     # Check for updates and show notification
     bindsym $mod+u exec notify-send "Updates" "$(apk list --upgradable | wc -l) updates available"
 
+	bindsym $mod+Shift+b exec qutebrowser
+
     # F9 key to toggle floating mode
     bindsym F9 floating toggle
 	# $mod+r to resize windows
