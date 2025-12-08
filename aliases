@@ -20,6 +20,8 @@ alias ip='ip --color=auto'
 alias backbus='dbus-daemon --session --address=unix:path=$XDG_RUNTIME_DIR/bus'
 alias ff='firefox about:blank &'
 alias qb='qutebrowser'
+alias qgit='git add . && git commit -m "$(date '+%Y%m%d_%H%M')" && git push'
+alias fzfalure='python ~/alure/alure'
 
 alias ksway='pkill sway'
 
