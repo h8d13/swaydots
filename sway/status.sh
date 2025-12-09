@@ -1,5 +1,12 @@
 #!/usr/bin/env bash
-interface=$(ip -o -4 route show to default | awk '{print $5}')
+# Get the active interface from default route
+interface=$(ip -o -4 route show to default | head -1 | awk '{print $5}')
+# Detect if it's WiFi or ethernet
+if [ -d "/sys/class/net/$interface/wireless" ]; then
+    net_type="WiFi"
+else
+    net_type="ETH"
+fi
 procs=$(ls /proc | grep -E '^[0-9]+$' | wc -l)
 dt=$(date +'%m-%d-%H:%M')
 ram_use=$(free -h | awk '/Mem:/ {print $3 "/" $2}')
@@ -42,4 +49,4 @@ if [[ -d /sys/class/power_supply/BAT0 ]] || [[ -d /sys/class/power_supply/BAT1 ]
     fi
 fi
 
-echo "USR: $USER | UP: $uptime | DT: $dt | LOAD: $load_avg | PSC: $procs | RAM: $ram_use | CPU: $cpu_use | NET: ↑$tx_total ↓$rx_total${bat_status} "
+echo "USR: $USER | UP: $uptime | DT: $dt | LOAD: $load_avg | PSC: $procs | RAM: $ram_use | CPU: $cpu_use | NET($net_type): ↑$tx_total ↓$rx_total${bat_status} "
