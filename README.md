@@ -50,6 +50,12 @@ My laptop had a media key for this
 
 Micro settings for SSH copy/paste and doas elevation.
 
+## Terminal markdown
+
+`doas apk add glow`
+
+Or the same locally: `glow https://url-to-raw-md-file`
+
 ----
 
 styles made for OLED screens, long coding sessions and least amount of flashy colors possible
