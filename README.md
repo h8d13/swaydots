@@ -25,10 +25,6 @@ You can then `apk add <something>-doc` and `man <something>`.
 
 `doas apk add thunar adwaita-icon-theme`
 
-## Terminal browser
-
-`doas apk add qutebrowser upower`
-
 ## Terminal media
 
 `doas apk add mpv yt-dlp`
@@ -55,6 +51,12 @@ Micro settings for SSH copy/paste and doas elevation.
 `doas apk add glow`
 
 Or the same locally: `glow https://url-to-raw-md-file`
+
+## Browser
+
+`doas apk add chromium`
+
+Mod+Shift+B Chromium with limits (target 1.5GB RAM max)
 
 ----
 
@@ -86,7 +88,8 @@ Start dbus:
 backbus
 ```
 
-`doas apk add dbus dbus-x11` 
+`doas apk add dbus dbus-x11 upower` 
+
 Then add dbus to boot level.
 
 This provides userspace tools such as notifications, upower, ...

@@ -216,6 +216,8 @@ bindsym $mod+r mode "resize"
     # Special key to take a screenshot with grim
     bindsym Print exec grim
 
+	bindsym $mod+Shift+b exec chromium --renderer-process-limit=4 --max-old-space-size=512 &
+
     # Calculator key to launch terminal calculator
     bindsym XF86Calculator exec $term -e qalc
 
