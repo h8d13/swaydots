@@ -17,7 +17,7 @@ alias grep='grep --color=auto'
 alias diff='diff --color=auto'
 alias ip='ip --color=auto'
 
-alias backbus='dbus-daemon --session --address=unix:path=$XDG_RUNTIME_DIR/bus'
+alias backbus='eval $(dbus-launch --sh-syntax)'
 alias ff='firefox about:blank &'
 alias qb='qutebrowser'
 alias qgit='git add . && git commit -m "$(date '+%Y%m%d_%H%M')" && git push'

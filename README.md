@@ -85,6 +85,10 @@ Start dbus:
 ```bash
 backbus
 ```
+
+`doas apk add dbus dbus-x11` 
+Then add dbus to boot level.
+
 This provides userspace tools such as notifications, upower, ...
 
 Can test with **mod+U** which will return `5 updates available`
