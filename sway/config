@@ -68,7 +68,9 @@ input type:touchpad {
 	bindsym $mod+Shift+Return exec $term zsh --login
 	# Start bottom ressource monitor
 	bindsym $mod+m exec $term btm
-	
+	# Ctrl+Alt+T to open zsh terminal
+	bindsym Ctrl+Mod1+t exec $term zsh --login
+
     # Kill focused window
     bindsym $mod+Shift+q kill
 
