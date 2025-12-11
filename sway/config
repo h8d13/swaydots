@@ -240,8 +240,8 @@ bindsym $mod+r mode "resize"
 bindsym $mod+t exec ~/.config/sway/toggle-colors.sh
 
 # Uncomment to disable title bars and use thin borders (more screen space, snappier)
-# default_border pixel 2
-# default_floating_border pixel 2
+default_border pixel 2
+default_floating_border pixel 2
 
 gaps inner 10
 gaps outer 5
