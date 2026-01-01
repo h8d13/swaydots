@@ -1,4 +1,5 @@
 {
-    "sucmd": "doas", 
-    "clipboard": "external"
+    "sucmd": "doas",
+    "clipboard": "external",
+    "colorscheme": "simple"
 }
