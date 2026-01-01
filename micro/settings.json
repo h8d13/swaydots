@@ -1,5 +1,6 @@
 {
     "sucmd": "doas",
     "clipboard": "external",
-    "colorscheme": "simple"
+    "colorscheme": "simple",
+    "ruler": true
 }

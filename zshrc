@@ -158,4 +158,4 @@ alias -g C='| wc -l'
 # null/err
 alias -g NE='2> /dev/null'
 alias -g NUL='> /dev/null 2>&1'
-alias glo='git log --all --decorate --oneline --graph --pretty=tformat:'%Cred%h%Creset %C(bold blue)%<(20,trunc)%an%Creset %C(auto)%d%Creset %s %Cgreen(%cr)''
+alias glo='git log --all --decorate --oneline --graph --pretty=tformat:"%Cred%h%Creset %C(bold blue)%<(20,trunc)%an%Creset %C(auto)%d%Creset %s %Cgreen(%cr)"'
