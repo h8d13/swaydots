@@ -1,3 +1,4 @@
+ export GPG_TTY=$(tty)
 # Python settings
 export VIRTUAL_ENV_DISABLE_PROMPT=1
 venv_prompt() {
