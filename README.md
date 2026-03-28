@@ -21,10 +21,6 @@ Also setup less pager coloring.
 
 You can then `apk add <something>-doc` and `man <something>`.
 
-## File explorer
-
-`doas apk add thunar adwaita-icon-theme`
-
 ## Terminal media
 
 `doas apk add mpv yt-dlp`
