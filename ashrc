@@ -1,3 +1,10 @@
+# OSC-7 for foot (enables Ctrl+Shift+N to open in same dir)
+__osc7() { printf '\e]7;file://%s%s\e\\' "$HOSTNAME" "$PWD"; }
+cd() { command cd "$@" && __osc7; }
+__osc7  # emit on shell startup
+
 export PS1="\[\e[34m\]┌──[\[\e[36m\]\A\[\e[34m\]]─[\[\e[39m\]\u\[\e[34m\]@\[\e[36m\]\h\[\e[34m\]]─[\[\e[32m\]\w\[\e[34m\]]\n\[\e[34m\]└──╼ \[\e[36m\]\$ \[\e[0m\]"
-export PATH="$HOME/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:$PATH"
+export PATH="$PYENV_ROOT/bin:$HOME/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 export LESS='-RXF --use-color -Dd+r$Du+b'
+
+[ -f "$HOME/.config/aliases" ] && . "$HOME/.config/aliases"

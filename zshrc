@@ -1,5 +1,29 @@
+# OSC-7 for foot (enables Ctrl+Shift+N to open in same dir)
+autoload -Uz add-zsh-hook
+function osc7-pwd() {
+    emulate -L zsh
+    setopt extendedglob
+    local LC_ALL=C
+    printf '\e]7;file://%s%s\e\\' $HOST ${PWD//(#m)([^@-Za-z&-;_~])/%${(l:2::0:)$(([##16]#MATCH))}}
+}
+function chpwd-osc7-pwd() {
+    (( ZSH_SUBSHELL )) || osc7-pwd
+}
+add-zsh-hook -Uz chpwd chpwd-osc7-pwd
+osc7-pwd  # emit on shell startup
+
 export GPG_TTY=$(tty)
 # Python settings
+# pyenv requires apk add git bash curl build-base libffi-dev openssl-dev
+# bzip2-dev zlib-dev readline-dev sqlite-dev tk-dev xz-dev
+export PYENV_ROOT="$HOME/.pyenv"
+export PATH="$PYENV_ROOT/bin:$PATH"
+pyenv() {
+  unfunction pyenv
+  eval "$(command pyenv init -)"
+  eval "$(command pyenv virtualenv-init -)"
+  pyenv "$@"
+}
 export VIRTUAL_ENV_DISABLE_PROMPT=1
 venv_prompt() {
   [[ -n "$VIRTUAL_ENV" ]] || return

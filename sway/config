@@ -66,6 +66,10 @@ input type:touchpad {
     bindsym $mod+Return exec $term --login
     # Start a zsh terminal when im tired
 	bindsym $mod+Shift+Return exec $term zsh --login
+    # Open ash in same directory as focused terminal
+    bindsym $mod+Ctrl+Return exec $term --working-directory="$(readlink /proc/$(pgrep -P $(swaymsg -t get_tree | jq '.. | select(.focused?) | .pid') | head -1)/cwd 2>/dev/null || echo $HOME)"
+    # Open zsh in same directory as focused terminal
+    bindsym $mod+Ctrl+Shift+Return exec $term --working-directory="$(readlink /proc/$(pgrep -P $(swaymsg -t get_tree | jq '.. | select(.focused?) | .pid') | head -1)/cwd 2>/dev/null || echo $HOME)" zsh --login
 	# Start bottom ressource monitor
 	bindsym $mod+m exec $term btm
 	# Ctrl+Alt+T to open zsh terminal
