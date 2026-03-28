@@ -52,6 +52,10 @@ Micro settings for SSH copy/paste and doas elevation.
 
 Or the same locally: `glow https://url-to-raw-md-file`
 
+## Clipboard history
+
+`doas apk add wl-clipboard cliphist` bind Mod + Shift + V
+
 ## Browser
 
 `doas apk add chromium`

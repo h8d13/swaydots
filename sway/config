@@ -40,6 +40,8 @@ output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
 ### Services
 # Notification daemon
 exec mako
+# Clipboard history
+exec wl-paste --watch cliphist store
 
 ### Input configuration
 
@@ -207,18 +209,22 @@ bindsym $mod+r mode "resize"
 #
 # Utilities:
 #
-    # Special keys to adjust volume via ALSA
-    bindsym --locked XF86AudioMute exec amixer set Master toggle
-    bindsym --locked XF86AudioLowerVolume exec amixer set Master 5%-
-    bindsym --locked XF86AudioRaiseVolume exec amixer set Master 5%+
-    bindsym --locked XF86AudioMicMute exec amixer set Capture toggle
+    # Special keys to adjust volume via ALSA (with OSD)
+    bindsym --locked XF86AudioMute exec amixer set Master toggle && notify-send -h string:x-canonical-private-synchronous:volume "Volume" "$(amixer get Master | grep -o '[0-9]*%' | head -1) $(amixer get Master | grep -o '\[on\]\|\[off\]' | head -1)"
+    bindsym --locked XF86AudioLowerVolume exec amixer set Master 5%- && notify-send -h string:x-canonical-private-synchronous:volume "Volume" "$(amixer get Master | grep -o '[0-9]*%' | head -1)"
+    bindsym --locked XF86AudioRaiseVolume exec amixer set Master 5%+ && notify-send -h string:x-canonical-private-synchronous:volume "Volume" "$(amixer get Master | grep -o '[0-9]*%' | head -1)"
+    bindsym --locked XF86AudioMicMute exec amixer set Capture toggle && notify-send -h string:x-canonical-private-synchronous:mic "Mic" "$(amixer get Capture | grep -o '\[on\]\|\[off\]' | head -1)"
 
-    # Special keys to adjust brightness via brightnessctl
-    bindsym --locked XF86MonBrightnessDown exec brightnessctl set 5%-
-    bindsym --locked XF86MonBrightnessUp exec brightnessctl set 5%+
+    # Special keys to adjust brightness via brightnessctl (with OSD)
+    bindsym --locked XF86MonBrightnessDown exec brightnessctl set 5%- && notify-send -h string:x-canonical-private-synchronous:brightness "Brightness" "$(brightnessctl -m | cut -d, -f4)"
+    bindsym --locked XF86MonBrightnessUp exec brightnessctl set 5%+ && notify-send -h string:x-canonical-private-synchronous:brightness "Brightness" "$(brightnessctl -m | cut -d, -f4)"
 
     # Special key to take a screenshot with grim
     bindsym Print exec grim
+
+    # Clipboard history picker (Mod+V)
+    bindsym $mod+Shift+v exec $term --title clipboard-fzf sh -c 'sel=$(cliphist list | fzf) && [ -n "$sel" ] && echo "$sel" | cliphist decode | wl-copy'
+    for_window [title="clipboard-fzf"] floating enable, resize set 600 400
 
 	bindsym $mod+Shift+b exec chromium --renderer-process-limit=4 --max-old-space-size=512 &
 
@@ -230,6 +236,8 @@ bindsym $mod+r mode "resize"
 
     # F9 key to toggle floating mode
     bindsym F9 floating toggle
+
+
 	# $mod+r to resize windows
 	# $mod+Shift to move them
 	# can set a window always floating

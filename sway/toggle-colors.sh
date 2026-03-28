@@ -17,6 +17,7 @@ MAKO_DARK="$MAKO_SOURCE/mako-dark.conf"
 MAKO_LIGHT="$MAKO_SOURCE/mako-light.conf"
 MAKO_LINK="$HOME/.config/mako/config"
 
+
 # Check which theme is currently active
 CURRENT=$(readlink "$SWAY_LINK" 2>/dev/null || echo "$SWAY_DARK")
 
