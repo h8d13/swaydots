@@ -47,8 +47,17 @@ if [ -d /sys/class/power_supply/BAT0 ] || [ -d /sys/class/power_supply/BAT1 ]; t
     bat_state=$(cat /sys/class/power_supply/BAT*/status 2>/dev/null | head -1)
     if [ "$bat_state" = "Charging" ]; then
         bat_status=" | BAT: ${bat_cap}%↑"
+        rm -f /tmp/bat_notif_*  # clear notification flags when charging
     else
         bat_status=" | BAT: ${bat_cap}%↓"
+        # Low battery notifications (only once per threshold, via swaymsg for DBUS)
+        if [ "$bat_cap" -le 10 ] && [ ! -f /tmp/bat_notif_10 ]; then
+            swaymsg exec "notify-send -u critical 'Battery Critical' '${bat_cap}% - plug in now!'"
+            touch /tmp/bat_notif_10
+        elif [ "$bat_cap" -le 20 ] && [ ! -f /tmp/bat_notif_20 ]; then
+            swaymsg exec "notify-send -u normal 'Battery Low' '${bat_cap}% remaining'"
+            touch /tmp/bat_notif_20
+        fi
     fi
 fi
 
