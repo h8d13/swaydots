@@ -48,6 +48,12 @@ Micro settings for SSH copy/paste and doas elevation.
 
 Or the same locally: `glow https://url-to-raw-md-file`
 
+## Terminal file explorer
+
+`doas apk add nnn`
+
+Minimal interactive ls with file operations. Keys: `d` details, `D` delete, `r` rename, `c` copy, `v` move, `p` paste, `n` new file, `N` new folder. Numbers 1-8 switch contexts (tabs).
+
 ## Clipboard history
 
 `doas apk add wl-clipboard cliphist` bind Mod + Shift + V
