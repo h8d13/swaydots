@@ -11,7 +11,7 @@ no extra deps only built-in ash + bash/zsh (fresh alpine install)
 
 ## Notifications
 
-`doas apk add mako`
+`doas apk add mako libnotify`
 
 ## Man pages
 
