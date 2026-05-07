@@ -25,7 +25,7 @@ fmt_iec() {
 }
 
 # Tick rates based on kernel spec in seconds
-readonly LOAD_REFRESH=5
+readonly LOAD_REFRESH=5 # (kernel/sched/loadavg.c LOAD_FREQ = 5*HZ + 1)
 
 # Arbitrary
 readonly IFACE_REFRESH=30
@@ -44,6 +44,8 @@ uptime=
 iface_ttl=0     # re-detect interface every IFACE_REFRESH ticks
 load_ttl=0      # re-read /proc/loadavg every LOAD_REFRESH ticks (kernel updates 1m-avg every 5s)
 uptime_ttl=0    # re-read /proc/uptime every UPTIME_REFRESH ticks (display rounds to minutes)
+psc_ttl=0       # re-glob /proc/[0-9]* every LOAD_REFRESH ticks (proc count is slow-moving)
+procs=0
 # Net byte counters: pre-init
 tx_raw=0
 rx_raw=0
@@ -68,11 +70,11 @@ readonly bat_cap_file bat_state_file
 
 while :; do
     # Interface detection: cache for IFACE_REFRESH ticks. Re-detect if cached
-    # interface's stats file vanished (cable yanked, wifi dropped) or TTL expired.
+    # interface's stats file vanished (cable yanked, wifi dropped...)
     if [ "$iface_ttl" -le 0 ] || [ ! -r "/sys/class/net/$interface/statistics/tx_bytes" ]; then
         interface=
         while read -r iface dest _; do
-            if [ "$dest" = "00000000" ]; then
+            if [ "$dest" = "00000000" ]; then # (net/ipv4/fib_trie.c fib_route_seq_show)
                 interface=$iface
                 break
             fi
@@ -86,7 +88,7 @@ while :; do
     fi
     iface_ttl=$((iface_ttl - 1))
 
-    # RAM used = total - available (modern `free` semantics).
+    # RAM used = total - available
     # Break after MemAvailable found (line 3 of /proc/meminfo) to skip read calls.
     mem_avail_kb=0
     while read -r k v _; do
@@ -100,11 +102,16 @@ while :; do
     fmt_iec $((mem_used_kb * 1024)); mem_used_h=$_iec_buf
     ram_use="$mem_used_h/$mem_total_h"
 
-    # Process count via glob
-    set -- /proc/[0-9]*
-    procs=$#
+    # Process count: re-glob every LOAD_REFRESH ticks. Killing the per-tick
+    # /proc dirent scan is the largest single-call saving available.
+    if [ "$psc_ttl" -le 0 ]; then
+        set -- /proc/[0-9]*
+        procs=$#
+        psc_ttl=$LOAD_REFRESH
+    fi
+    psc_ttl=$((psc_ttl - 1))
 
-    # Load avg: refresh every LOAD_REFRESH ticks (kernel/sched/loadavg.c LOAD_FREQ = 5*HZ + 1)
+    # Load avg: refresh every LOAD_REFRESH ticks
     if [ "$load_ttl" -le 0 ]; then
         read -r load_avg _ < /proc/loadavg
         load_ttl=$LOAD_REFRESH
@@ -114,7 +121,7 @@ while :; do
     # Uptime as HH:MM (hours unbounded, grows past 24 for multi-day uptimes).
     # Refresh every UPTIME_REFRESH ticks (display only changes when minutes tick over).
     if [ "$uptime_ttl" -le 0 ]; then
-        read -r up _ < /proc/uptime
+        read -r up _ < /proc/uptime # fmt "%lu.%02lu" centiseconds (fs/proc/uptime.c uptime_proc_show)
         up=${up%.*}
         hh=$((up / 3600))
         mm=$(( (up % 3600) / 60 ))
@@ -131,6 +138,7 @@ while :; do
     fmt_iec "$rx_raw"; rx_total=$_iec_buf
 
     # CPU: aggregate /proc/stat line, diff against prior tick's snapshot
+    # Field order: user nice system idle iowait irq softirq steal guest guest_nice (fs/proc/stat.c show_stat)
     read -r _ u ni sy id io ir si _ < /proc/stat
     cpu_now_total=$((u + ni + sy + id + io + ir + si))
     cpu_now_idle=$id
@@ -152,10 +160,10 @@ while :; do
     bat_state=
     if [ -n "$bat_cap_file" ]; then
         read -r bat_cap < "$bat_cap_file"
-        [ -r "$bat_state_file" ] && read -r bat_state < "$bat_state_file"
+        read -r bat_state < "$bat_state_file"
     fi
     if [ -n "$bat_cap" ]; then
-        if [ "$bat_state" = "Charging" ]; then
+        if [ "$bat_state" = "Charging" ]; then # (drivers/power/supply/power_supply_sysfs.c POWER_SUPPLY_STATUS_TEXT)
             bat_status=" | BAT: ${bat_cap}%↑"
             notified_10=
             notified_20=
