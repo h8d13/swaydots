@@ -12,7 +12,7 @@ set -u  # treat unset vars as errors. All state is explicitly initialized below.
 # Out-param via `_iec_buf` (avoids $() subshell fork). Caller: `fmt_iec N; var=$_iec_buf`.
 _iec_buf=
 fmt_iec() {
-    local n=$1
+    n=$1
     if [ "$n" -ge 1073741824 ]; then
         _iec_buf="$((n / 1073741824)).$(( (n * 10 / 1073741824) % 10 ))G"
     elif [ "$n" -ge 1048576 ]; then
@@ -89,7 +89,7 @@ while :; do
     fmt_iec $((mem_used_kb * 1024)); mem_used_h=$_iec_buf
     ram_use="$mem_used_h/$mem_total_h"
 
-    # Load avg: refresh every LOAD_REFRESH ticks (ernel/sched/loadavg.c LOAD_FREQ = 5*HZ + 1)
+    # Load avg: refresh every LOAD_REFRESH ticks (kernel/sched/loadavg.c LOAD_FREQ = 5*HZ + 1)
     if [ "$load_ttl" -le 0 ]; then
         read -r load_avg _ < /proc/loadavg
         load_ttl=$LOAD_REFRESH
