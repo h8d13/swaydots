@@ -2,6 +2,7 @@
 # POSIX sh status bar. No bashisms, no GNU coreutils deps.
 # Long-running: shell starts once, ticks internally every 1s.
 # Per-tick: 0 child processes (except `sleep`), 0 fs writes outside /proc reads.
+# Example: USR: hadean | UP: 1h 0m | LOAD: 0.51 | PSC: 373 | RAM: 5.9G/31.1G | CPU: 3.1% | NET(ETH): ↑67.9M ↓495.9M
 
 set -u  # treat unset vars as errors. All state is explicitly initialized below.
 
@@ -22,11 +23,11 @@ fmt_iec() {
 }
 
 # Tick rates based on kernel spec in seconds
-IFACE_REFRESH=30
-LOAD_REFRESH=5
-UPTIME_REFRESH=60
+readonly IFACE_REFRESH=30
+readonly LOAD_REFRESH=5
+readonly UPTIME_REFRESH=60
 
-# Cross-tick state 
+# Cross-tick state
 cpu_prev_total=
 cpu_prev_idle=
 notified_10=
@@ -38,10 +39,16 @@ load_ttl=0      # re-read /proc/loadavg every LOAD_REFRESH ticks (kernel updates
 uptime_ttl=0    # re-read /proc/uptime every UPTIME_REFRESH ticks (display rounds to minutes)
 load_avg=
 uptime=
+# Net byte counters: pre-init so set -u doesn't fire on the first offline tick
+# (if no default route exists, the read below silently fails to assign).
+tx_raw=0
+rx_raw=0
 
 # RAM total: doesn't change at runtime, format once
 read -r _ mem_total_kb _ < /proc/meminfo  # MemTotal: is line 1
-fmt_iec $((mem_total_kb * 1024)); mem_total_h=$_iec_buf
+readonly mem_total_kb
+fmt_iec $((mem_total_kb * 1024))
+readonly mem_total_h=$_iec_buf
 
 while :; do
     # Interface detection: cache for IFACE_REFRESH ticks. Re-detect if cached
@@ -87,20 +94,15 @@ while :; do
     fi
     load_ttl=$((load_ttl - 1))
 
-    # Uptime: refresh every UPTIME_REFRESH ticks (display only changes when minutes tick over)
+    # Uptime as HH:MM (hours unbounded, grows past 24 for multi-day uptimes).
+    # Refresh every UPTIME_REFRESH ticks (display only changes when minutes tick over).
     if [ "$uptime_ttl" -le 0 ]; then
         read -r up _ < /proc/uptime
         up=${up%.*}
-        days=$((up / 86400))
-        hours=$(( (up % 86400) / 3600 ))
-        mins=$(( (up % 3600) / 60 ))
-        if [ "$days" -gt 0 ]; then
-            uptime="${days}d ${hours}h"
-        elif [ "$hours" -gt 0 ]; then
-            uptime="${hours}h ${mins}m"
-        else
-            uptime="${mins}m"
-        fi
+        hh=$((up / 3600))
+        mm=$(( (up % 3600) / 60 ))
+        [ "$mm" -lt 10 ] && mm="0$mm"
+        uptime="${hh}:${mm}"
         uptime_ttl=$UPTIME_REFRESH
     fi
     uptime_ttl=$((uptime_ttl - 1))
