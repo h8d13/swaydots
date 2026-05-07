@@ -20,6 +20,8 @@ alias ip='ip --color=auto'
 alias backbus='eval $(dbus-launch --sh-syntax)'
 alias ff='firefox about:blank &'
 alias qgit='git add . && git commit -m "$(date '+%Y%m%d_%H%M')" && git push'
+alias lgit='git log --all --decorate --oneline --graph --pretty=tformat:"%Cred%h%Creset %C(bold blue)%<(20,trunc)%an%Creset %C(auto)%d%Creset %s %Cgreen(%cr)"'
+
 alias mc='micro'
 alias fzfalure='python ~/alure/alure'
 
@@ -27,11 +29,9 @@ alias ksway='pkill sway'
 
 alias apkli='apk list --installed | grep --color=auto'
 
-
 # requires elev
 # set cable down and connect to arg1 SSID and generate ip
 # example: cwifi "mynetwork" prompts for password if unkown
-
 
 cwifi() {
     doas ip link set eth0 down && nmcli d wifi c "$1" -a && doas udhcpc -i wlan0
