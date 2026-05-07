@@ -2,11 +2,13 @@
 # POSIX sh status bar. No bashisms, no GNU coreutils deps.
 # Long-running: shell starts once, ticks internally every 1s.
 # Per-tick: 0 child processes (except `sleep`), 0 fs writes outside /proc reads.
-# Example: USR: hadean | UP: 1h 0m | LOAD: 0.51 | PSC: 373 | RAM: 5.9G/31.1G | CPU: 3.1% | NET(ETH): ↑67.9M ↓495.9M
+
+# Example: USR: hadean | UP: 1:07 | LOAD: 0.51 | PSC: 373 | RAM: 5.9G/31.1G | CPU: 3.1% | NET(ETH): ↑67.9M ↓495.9M
+# If a battery is detected shows capacity and status (charging vs on battery) also warns on low, critical battery (20-10%)
 
 set -u  # treat unset vars as errors. All state is explicitly initialized below.
 
-# IEC formatter, one decimal place. Input: bytes.
+# IEC formatter helper, one decimal place. Input: bytes.
 # Out-param via `_iec_buf` (avoids $() subshell fork). Caller: `fmt_iec N; var=$_iec_buf`.
 _iec_buf=
 fmt_iec() {
@@ -27,7 +29,7 @@ readonly IFACE_REFRESH=30
 readonly LOAD_REFRESH=5
 readonly UPTIME_REFRESH=60
 
-# Cross-tick state
+# State
 cpu_prev_total=
 cpu_prev_idle=
 notified_10=
@@ -39,12 +41,11 @@ load_ttl=0      # re-read /proc/loadavg every LOAD_REFRESH ticks (kernel updates
 uptime_ttl=0    # re-read /proc/uptime every UPTIME_REFRESH ticks (display rounds to minutes)
 load_avg=
 uptime=
-# Net byte counters: pre-init so set -u doesn't fire on the first offline tick
-# (if no default route exists, the read below silently fails to assign).
+# Net byte counters: pre-init
 tx_raw=0
 rx_raw=0
 
-# RAM total: doesn't change at runtime, format once
+# RAM total: doesn't change at runtime, format once at init
 read -r _ mem_total_kb _ < /proc/meminfo  # MemTotal: is line 1
 readonly mem_total_kb
 fmt_iec $((mem_total_kb * 1024))
@@ -75,7 +76,7 @@ while :; do
     procs=$#
 
     # RAM used = total - available (modern `free` semantics).
-    # Break after MemAvailable found (line 3 of /proc/meminfo) to skip ~45 read calls.
+    # Break after MemAvailable found (line 3 of /proc/meminfo) to skip read calls.
     mem_avail_kb=0
     while read -r k v _; do
         if [ "$k" = "MemAvailable:" ]; then
@@ -83,11 +84,12 @@ while :; do
             break
         fi
     done < /proc/meminfo
+    # now only start polling used
     mem_used_kb=$((mem_total_kb - mem_avail_kb))
     fmt_iec $((mem_used_kb * 1024)); mem_used_h=$_iec_buf
     ram_use="$mem_used_h/$mem_total_h"
 
-    # Load avg: refresh every LOAD_REFRESH ticks (kernel only updates the 1m avg every 5s)
+    # Load avg: refresh every LOAD_REFRESH ticks (ernel/sched/loadavg.c LOAD_FREQ = 5*HZ + 1)
     if [ "$load_ttl" -le 0 ]; then
         read -r load_avg _ < /proc/loadavg
         load_ttl=$LOAD_REFRESH
@@ -138,7 +140,7 @@ while :; do
         read -r bat_cap < "$f"
         sf="${f%/capacity}/status"
         [ -r "$sf" ] && read -r bat_state < "$sf"
-        break
+        break # else no battery = do not display
     done
     if [ -n "$bat_cap" ]; then
         if [ "$bat_state" = "Charging" ]; then
@@ -148,10 +150,10 @@ while :; do
         else
             bat_status=" | BAT: ${bat_cap}%↓"
             if [ "$bat_cap" -le 10 ] && [ -z "$notified_10" ]; then
-                swaymsg exec "notify-send -u critical 'Battery Critical' '${bat_cap}% - plug in now!'"
+                swaymsg exec "notify-send -u critical 'Battery Critical' '${bat_cap}% remaining.'"
                 notified_10=1
             elif [ "$bat_cap" -le 20 ] && [ -z "$notified_20" ]; then
-                swaymsg exec "notify-send -u normal 'Battery Low' '${bat_cap}% remaining'"
+                swaymsg exec "notify-send -u normal 'Battery Low' '${bat_cap}% remaining.'"
                 notified_20=1
             fi
         fi
