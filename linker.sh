@@ -6,9 +6,13 @@ mkdir -p ~/.config/foot
 mkdir -p ~/.config/mako
 
 doas rm -f /etc/environment
+doas rm -f /etc/issue
+doas rm -f /etc/motd
 rm -f ~/.config/sway/config
 
 doas ln -s ~/swaydots/etc/environment /etc/environment
+doas ln -s ~/swaydots/etc/issue /etc/issue
+doas ln -s ~/swaydots/etc/motd /etc/motd
 ln -s ~/swaydots/sway/config ~/.config/sway/config
 ln -s ~/swaydots/sway/status.sh ~/.config/sway/status.sh
 ln -s ~/swaydots/sway/toggle-colors.sh ~/.config/sway/toggle-colors.sh
