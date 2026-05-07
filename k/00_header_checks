@@ -3,6 +3,6 @@
 
 if [ "$EUID" -eq 0 ]; then
     echo "This script must NOT be run as root"
-    echo "It will prompt for sudo when appropriate..."
+    echo "It will prompt for root when appropriate..."
     exit 1
 fi
