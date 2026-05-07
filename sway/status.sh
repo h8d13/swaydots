@@ -3,27 +3,30 @@
 # Long-running: shell starts once, ticks internally every 1s.
 # Per-tick: 0 child processes (except `sleep`), 0 fs writes outside /proc reads.
 
-# Skip bash TIOCGWINSZ probe per command (stdout is a pipe to swaybar).
-COLUMNS=80
-LINES=24
-export COLUMNS LINES
+set -u  # treat unset vars as errors. All state is explicitly initialized below.
 
 # IEC formatter, one decimal place. Input: bytes.
-# Out-param via REPLY: caller reads $REPLY. Avoids $() subshell fork entirely.
+# Out-param via `_iec_buf` (avoids $() subshell fork). Caller: `fmt_iec N; var=$_iec_buf`.
+_iec_buf=
 fmt_iec() {
-    n=$1
+    local n=$1
     if [ "$n" -ge 1073741824 ]; then
-        REPLY="$((n / 1073741824)).$(( (n * 10 / 1073741824) % 10 ))G"
+        _iec_buf="$((n / 1073741824)).$(( (n * 10 / 1073741824) % 10 ))G"
     elif [ "$n" -ge 1048576 ]; then
-        REPLY="$((n / 1048576)).$(( (n * 10 / 1048576) % 10 ))M"
+        _iec_buf="$((n / 1048576)).$(( (n * 10 / 1048576) % 10 ))M"
     elif [ "$n" -ge 1024 ]; then
-        REPLY="$((n / 1024)).$(( (n * 10 / 1024) % 10 ))K"
+        _iec_buf="$((n / 1024)).$(( (n * 10 / 1024) % 10 ))K"
     else
-        REPLY="${n}B"
+        _iec_buf="${n}B"
     fi
 }
 
-# Cross-tick state (replaces /tmp/cpu_stats and /tmp/bat_notif_*)
+# Tick rates based on kernel spec in seconds
+IFACE_REFRESH=30
+LOAD_REFRESH=5
+UPTIME_REFRESH=60
+
+# Cross-tick state 
 cpu_prev_total=
 cpu_prev_idle=
 notified_10=
@@ -35,13 +38,10 @@ load_ttl=0      # re-read /proc/loadavg every LOAD_REFRESH ticks (kernel updates
 uptime_ttl=0    # re-read /proc/uptime every UPTIME_REFRESH ticks (display rounds to minutes)
 load_avg=
 uptime=
-IFACE_REFRESH=30
-LOAD_REFRESH=5
-UPTIME_REFRESH=60
 
 # RAM total: doesn't change at runtime, format once
 read -r _ mem_total_kb _ < /proc/meminfo  # MemTotal: is line 1
-fmt_iec $((mem_total_kb * 1024)); mem_total_h=$REPLY
+fmt_iec $((mem_total_kb * 1024)); mem_total_h=$_iec_buf
 
 while :; do
     # Interface detection: cache for IFACE_REFRESH ticks. Re-detect if cached
@@ -77,7 +77,7 @@ while :; do
         fi
     done < /proc/meminfo
     mem_used_kb=$((mem_total_kb - mem_avail_kb))
-    fmt_iec $((mem_used_kb * 1024)); mem_used_h=$REPLY
+    fmt_iec $((mem_used_kb * 1024)); mem_used_h=$_iec_buf
     ram_use="$mem_used_h/$mem_total_h"
 
     # Load avg: refresh every LOAD_REFRESH ticks (kernel only updates the 1m avg every 5s)
@@ -108,8 +108,8 @@ while :; do
     # Net bytes
     read -r tx_raw < "/sys/class/net/$interface/statistics/tx_bytes"
     read -r rx_raw < "/sys/class/net/$interface/statistics/rx_bytes"
-    fmt_iec "$tx_raw"; tx_total=$REPLY
-    fmt_iec "$rx_raw"; rx_total=$REPLY
+    fmt_iec "$tx_raw"; tx_total=$_iec_buf
+    fmt_iec "$rx_raw"; rx_total=$_iec_buf
 
     # CPU: aggregate /proc/stat line, diff against prior tick's snapshot
     read -r _ u ni sy id io ir si _ < /proc/stat
