@@ -32,8 +32,14 @@ venv_prompt() {
 }
 # auto cd if type dir 
 setopt AUTO_CD
-# Completion init
-autoload -Uz compinit && compinit
+# Completion init: full compinit once per 24h, cached load (-C) otherwise.
+# `(#qN.mh+24)` matches the dump only if older than 24h; absence/fresh -> use cache.
+autoload -Uz compinit
+if [[ -n ~/.zcompdump(#qN.mh+24) ]]; then
+    compinit
+else
+    compinit -C
+fi
 zstyle ':completion:*' completer _complete _match _approximate
 zstyle ':completion:*:match:*' original only
 zstyle ':completion:*:approximate:*' max-errors 1 numeric
@@ -56,10 +62,7 @@ ZSH_CONFIG_DIR="$HOME/.config/zsh"
 # Source aliases and environment
 [ -f "$HOME/.config/aliases" ] && . "$HOME/.config/aliases"
 [ -f "$HOME/.config/environment" ] && . "$HOME/.config/environment"
-plugin_file="$ZSH_CONFIG_DIR/zsh-autosuggestions/zsh-autosuggestions.zsh"
-[ -f "$plugin_file" ] && . "$plugin_file"
-# Ensure autosuggestions start
-(( $+functions[_zsh_autosuggest_start] )) && _zsh_autosuggest_start
+# autosuggestions deferred to first prompt (see _defer_plugins at end)
 # Correction just for commands not for files/args
 setopt CORRECT #CORRECT_ALL
 # Git VCS info
@@ -167,9 +170,19 @@ rationalise-dot() {
 }
 zle -N rationalise-dot
 bindkey . rationalise-dot
-# Syntax highlighting (MUST be at the end)
-plugin_file="$ZSH_CONFIG_DIR/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
-[ -f "$plugin_file" ] && . "$plugin_file"
+# Defer heavy plugins to first prompt: avoids paying the load cost for
+# `zsh --login` script invocations and shaves startup time / RSS for interactive shells.
+# Sourced after all bindkey/ZLE setup is done (which is exactly first-prompt time).
+_defer_plugins() {
+    local p
+    p="$ZSH_CONFIG_DIR/zsh-autosuggestions/zsh-autosuggestions.zsh"
+    [ -f "$p" ] && . "$p" && (( $+functions[_zsh_autosuggest_start] )) && _zsh_autosuggest_start
+    p="$ZSH_CONFIG_DIR/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+    [ -f "$p" ] && . "$p"
+    add-zsh-hook -d precmd _defer_plugins
+    unfunction _defer_plugins
+}
+add-zsh-hook precmd _defer_plugins
 # find new executable completions
 zstyle ':completion:*' rehash true
 # global zsh alias
