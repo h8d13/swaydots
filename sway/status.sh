@@ -25,22 +25,25 @@ fmt_iec() {
 }
 
 # Tick rates based on kernel spec in seconds
-readonly IFACE_REFRESH=30
 readonly LOAD_REFRESH=5
+
+# Arbitrary
+readonly IFACE_REFRESH=30
 readonly UPTIME_REFRESH=60
 
-# State
+# State vars
 cpu_prev_total=
 cpu_prev_idle=
 notified_10=
 notified_20=
 interface=
 net_type=
+load_avg=
+uptime=
+
 iface_ttl=0     # re-detect interface every IFACE_REFRESH ticks
 load_ttl=0      # re-read /proc/loadavg every LOAD_REFRESH ticks (kernel updates 1m-avg every 5s)
 uptime_ttl=0    # re-read /proc/uptime every UPTIME_REFRESH ticks (display rounds to minutes)
-load_avg=
-uptime=
 # Net byte counters: pre-init
 tx_raw=0
 rx_raw=0
@@ -50,6 +53,18 @@ read -r _ mem_total_kb _ < /proc/meminfo  # MemTotal: is line 1
 readonly mem_total_kb
 fmt_iec $((mem_total_kb * 1024))
 readonly mem_total_h=$_iec_buf
+
+# Battery: resolve path once at init (empty = no battery, skip per-tick).
+# Avoids globbing /sys/class/power_supply each tick.
+bat_cap_file=
+bat_state_file=
+for f in /sys/class/power_supply/BAT*/capacity; do
+    [ -r "$f" ] || continue
+    bat_cap_file=$f
+    bat_state_file="${f%/capacity}/status"
+    break
+done
+readonly bat_cap_file bat_state_file
 
 while :; do
     # Interface detection: cache for IFACE_REFRESH ticks. Re-detect if cached
@@ -71,10 +86,6 @@ while :; do
     fi
     iface_ttl=$((iface_ttl - 1))
 
-    # Process count via glob
-    set -- /proc/[0-9]*
-    procs=$#
-
     # RAM used = total - available (modern `free` semantics).
     # Break after MemAvailable found (line 3 of /proc/meminfo) to skip read calls.
     mem_avail_kb=0
@@ -88,6 +99,10 @@ while :; do
     mem_used_kb=$((mem_total_kb - mem_avail_kb))
     fmt_iec $((mem_used_kb * 1024)); mem_used_h=$_iec_buf
     ram_use="$mem_used_h/$mem_total_h"
+
+    # Process count via glob
+    set -- /proc/[0-9]*
+    procs=$#
 
     # Load avg: refresh every LOAD_REFRESH ticks (kernel/sched/loadavg.c LOAD_FREQ = 5*HZ + 1)
     if [ "$load_ttl" -le 0 ]; then
@@ -131,17 +146,14 @@ while :; do
     cpu_prev_total=$cpu_now_total
     cpu_prev_idle=$cpu_now_idle
 
-    # Battery: iterate any BAT*/capacity, read first hit
+    # Battery: read cached path (resolved once at init).
     bat_status=
     bat_cap=
     bat_state=
-    for f in /sys/class/power_supply/BAT*/capacity; do
-        [ -r "$f" ] || continue
-        read -r bat_cap < "$f"
-        sf="${f%/capacity}/status"
-        [ -r "$sf" ] && read -r bat_state < "$sf"
-        break # else no battery = do not display
-    done
+    if [ -n "$bat_cap_file" ]; then
+        read -r bat_cap < "$bat_cap_file"
+        [ -r "$bat_state_file" ] && read -r bat_state < "$bat_state_file"
+    fi
     if [ -n "$bat_cap" ]; then
         if [ "$bat_state" = "Charging" ]; then
             bat_status=" | BAT: ${bat_cap}%↑"
