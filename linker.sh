@@ -12,7 +12,7 @@ fi
 if [ ! -d "/home/$USER" ]; then
     echo "linker.sh: /home/$USER missing" && exit 1
 fi
-
+# deps
 PKGS="
     jq bash fd fzf grep diffutils iproute2 bottom
     mandoc man-pages mandoc-apropos less
@@ -32,13 +32,16 @@ PKGS="
 
 apk add $PKGS
 
+# dirs
 mkdir -p /home/$USER/.config/bash
 mkdir -p /home/$USER/.config/zsh
 mkdir -p /home/$USER/.config/sway
 mkdir -p /home/$USER/.config/foot
 mkdir -p /home/$USER/.config/mako
 mkdir -p /home/$USER/.config/micro
+mkdir -p /home/$USER/.local/bin
 
+# system
 rm -f /etc/environment
 rm -f /etc/issue
 rm -f /etc/motd
@@ -47,6 +50,22 @@ rm -f /home/$USER/.config/sway/config
 ln -s /home/$USER/.swaydots/etc/environment /etc/environment
 ln -s /home/$USER/.swaydots/etc/issue /etc/issue
 ln -s /home/$USER/.swaydots/etc/motd /etc/motd
+
+# shells
+ln -s /home/$USER/.swaydots/aliases /home/$USER/.config/aliases
+ln -s /home/$USER/.swaydots/environment /home/$USER/.config/environment
+ln -s /home/$USER/.swaydots/profile /home/$USER/.profile
+ln -s /home/$USER/.swaydots/ashrc /home/$USER/.ashrc
+ln -s /home/$USER/.swaydots/bashrc /home/$USER/.config/bash/bashrc
+ln -s /home/$USER/.swaydots/zshrc /home/$USER/.config/zsh/zshrc
+# tiny stubs at $HOME that source the .config/<shell>/<rc> split.
+ln -s /home/$USER/.swaydots/home_bashrc /home/$USER/.bashrc
+ln -s /home/$USER/.swaydots/home_zshrc /home/$USER/.zshrc
+
+# user bin
+ln -s /home/$USER/.swaydots/bin/hello /home/$USER/.local/bin/hello
+
+# sway or related
 ln -s /home/$USER/.swaydots/sway/config /home/$USER/.config/sway/config
 ln -s /home/$USER/.swaydots/sway/status.sh /home/$USER/.config/sway/status.sh
 ln -s /home/$USER/.swaydots/sway/toggle-colors.sh /home/$USER/.config/sway/toggle-colors.sh
@@ -56,10 +75,5 @@ ln -sf /home/$USER/.swaydots/foot/foot-dark.ini /home/$USER/.config/foot/foot.in
 ln -sf /home/$USER/.swaydots/mako/mako-dark.conf /home/$USER/.config/mako/config
 ln -s /home/$USER/.swaydots/micro/settings.json /home/$USER/.config/micro/settings.json
 
-ln -s /home/$USER/.swaydots/aliases /home/$USER/.config/aliases
-ln -s /home/$USER/.swaydots/profile /home/$USER/.profile
-ln -s /home/$USER/.swaydots/ashrc /home/$USER/.ashrc
-ln -s /home/$USER/.swaydots/bashrc /home/$USER/.config/bash/bashrc
-ln -s /home/$USER/.swaydots/zshrc /home/$USER/.config/zsh/zshrc
-
+# perms
 chown -R "$USER":"$USER" "/home/$USER"
