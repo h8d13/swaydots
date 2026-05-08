@@ -3,7 +3,7 @@
 USER="${DOAS_USER:-$1}"
 
 PKGS="
-    git jq bash zsh zsh-vcs fd fzf grep diffutils iproute2 bottom
+    jq bash zsh zsh-vcs fd fzf grep diffutils iproute2 bottom
     mako libnotify
     mandoc man-pages mandoc-apropos less
     mpv yt-dlp
