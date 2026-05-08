@@ -7,10 +7,12 @@ PKGS="
     mako libnotify
     mandoc man-pages mandoc-apropos less
     mpv yt-dlp
-    qcalc
-    micro glow
+    kcalc
+    micro
+    glow@testing
     nnn
-    wl-clipboard cliphist
+    wl-clipboard
+    cliphist@testing
     chromium
     dbus-x11 upower
 "
@@ -21,6 +23,7 @@ mkdir -p /home/$USER/.config/zsh
 mkdir -p /home/$USER/.config/sway
 mkdir -p /home/$USER/.config/foot
 mkdir -p /home/$USER/.config/mako
+mkdir -p /home/$USER/.config/micro
 
 rm -f /etc/environment
 rm -f /etc/issue
