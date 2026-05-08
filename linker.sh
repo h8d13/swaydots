@@ -12,8 +12,17 @@ fi
 if [ ! -d "/home/$USER" ]; then
     echo "linker.sh: /home/$USER missing" && exit 1
 fi
-# deps
-PKGS="
+
+# we do not use setup-desktop because that pulls in elogind daemon
+# swayidle pulls in libelogind the .so at 569KB, but NOT the elogind daemon
+
+SWAY="
+    sway swaybg swaylockd foot grim wl-clipboard wmenu swayidle
+    xwayland font-dejavu i3status brightnessctl util-linux-login
+"
+
+# dotfiles deps
+XTRA_PKGS="
     jq bash fd fzf grep diffutils iproute2 bottom
     mandoc man-pages mandoc-apropos less
     zsh zsh-vcs zsh-completions zsh-syntax-highlighting zsh-autosuggestions zsh-history-substring-search
@@ -22,7 +31,6 @@ PKGS="
     kcalc
     micro
     nnn
-    wl-clipboard
     cliphist@testing
     glow@testing
     chromium
@@ -30,7 +38,7 @@ PKGS="
 "
     #vscodium@testing
 
-apk add $PKGS
+apk add $SWAY $XTRA_PKGS
 
 # dirs
 mkdir -p /home/$USER/.config/bash
