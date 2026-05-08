@@ -14,9 +14,10 @@ if [ ! -d "/home/$USER" ]; then
 fi
 
 PKGS="
-    jq bash zsh zsh-vcs fd fzf grep diffutils iproute2 bottom
-    mako libnotify
+    jq bash fd fzf grep diffutils iproute2 bottom
     mandoc man-pages mandoc-apropos less
+    zsh zsh-vcs zsh-completions zsh-syntax-highlighting zsh-autosuggestions zsh-history-substring-search
+    mako libnotify
     mpv yt-dlp
     kcalc
     micro

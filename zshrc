@@ -30,8 +30,11 @@ venv_prompt() {
   local name=${VIRTUAL_ENV:t}
   echo -n "─%F{red}[%F{green}$name%F{red}]%f"
 }
-# auto cd if type dir 
+# auto cd if type dir
 setopt AUTO_CD
+# zsh-completions package drops its compdefs in site-functions; alpine's
+# default fpath misses that dir, so add it before compinit picks them up.
+fpath=(/usr/share/zsh/site-functions $fpath)
 # Completion init: full compinit once per 24h, cached load (-C) otherwise.
 # `(#qN.mh+24)` matches the dump only if older than 24h; absence/fresh -> use cache.
 autoload -Uz compinit
@@ -57,8 +60,8 @@ setopt HIST_FIND_NO_DUPS    # Don't show duplicates when searching
 setopt HIST_VERIFY 			# Show command after history expansion before running
 # Grayed out difference when is suggestion
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=#777'
-# Load autosuggestions from ~/.config/zsh/
-ZSH_CONFIG_DIR="$HOME/.config/zsh"
+# Plugins installed via apk land under /usr/share/zsh/plugins/.
+ZSH_PLUGIN_DIR="/usr/share/zsh/plugins"
 # Source aliases and environment
 [ -f "$HOME/.config/aliases" ] && . "$HOME/.config/aliases"
 [ -f "$HOME/.config/environment" ] && . "$HOME/.config/environment"
@@ -134,7 +137,7 @@ if [ -f /usr/share/fzf/completion.zsh ]; then
   source /usr/share/fzf/completion.zsh
 fi
 # Source substring search
-plugin_file="$ZSH_CONFIG_DIR/zsh-history-substring-search/zsh-history-substring-search.zsh"
+plugin_file="$ZSH_PLUGIN_DIR/zsh-history-substring-search/zsh-history-substring-search.zsh"
 [ -f "$plugin_file" ] && . "$plugin_file"
 # Search key bindings
 bindkey '^[[A' history-substring-search-up
@@ -175,9 +178,9 @@ bindkey . rationalise-dot
 # Sourced after all bindkey/ZLE setup is done (which is exactly first-prompt time).
 _defer_plugins() {
     local p
-    p="$ZSH_CONFIG_DIR/zsh-autosuggestions/zsh-autosuggestions.zsh"
+    p="$ZSH_PLUGIN_DIR/zsh-autosuggestions/zsh-autosuggestions.zsh"
     [ -f "$p" ] && . "$p" && (( $+functions[_zsh_autosuggest_start] )) && _zsh_autosuggest_start
-    p="$ZSH_CONFIG_DIR/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+    p="$ZSH_PLUGIN_DIR/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
     [ -f "$p" ] && . "$p"
     add-zsh-hook -d precmd _defer_plugins
     unfunction _defer_plugins
