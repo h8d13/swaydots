@@ -75,5 +75,5 @@ ln -sf /home/$USER/.swaydots/foot/foot-dark.ini /home/$USER/.config/foot/foot.in
 ln -sf /home/$USER/.swaydots/mako/mako-dark.conf /home/$USER/.config/mako/config
 ln -s /home/$USER/.swaydots/micro/settings.json /home/$USER/.config/micro/settings.json
 
-# perms
+# restore perms
 chown -R "$USER":"$USER" "/home/$USER"
