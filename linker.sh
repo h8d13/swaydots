@@ -1,31 +1,34 @@
 #!/bin/bash
-mkdir -p ~/.config/bash
-mkdir -p ~/.config/zsh
-mkdir -p ~/.config/sway
-mkdir -p ~/.config/foot
-mkdir -p ~/.config/mako
+# meant to run with doas
+USER="${DOAS_USER:-$1}"
 
-doas rm -f /etc/environment
-doas rm -f /etc/issue
-doas rm -f /etc/motd
-rm -f ~/.config/sway/config
+mkdir -p /home/$USER/.config/bash
+mkdir -p /home/$USER/.config/zsh
+mkdir -p /home/$USER/.config/sway
+mkdir -p /home/$USER/.config/foot
+mkdir -p /home/$USER/.config/mako
 
-doas ln -s ~/swaydots/etc/environment /etc/environment
-doas ln -s ~/swaydots/etc/issue /etc/issue
-doas ln -s ~/swaydots/etc/motd /etc/motd
-ln -s ~/swaydots/sway/config ~/.config/sway/config
-ln -s ~/swaydots/sway/status.sh ~/.config/sway/status.sh
-ln -s ~/swaydots/sway/toggle-colors.sh ~/.config/sway/toggle-colors.sh
+rm -f /etc/environment
+rm -f /etc/issue
+rm -f /etc/motd
+rm -f /home/$USER/.config/sway/config
 
-ln -sf ~/swaydots/sway/theme-dark.conf ~/.config/sway/theme.conf
-ln -sf ~/swaydots/foot/foot-dark.ini ~/.config/foot/foot.ini
-ln -sf ~/swaydots/mako/mako-dark.conf ~/.config/mako/config
-ln -s ~/swaydots/micro/settings.json ~/.config/micro/settings.json
+ln -s /home/$USER/swaydots/etc/environment /etc/environment
+ln -s /home/$USER/swaydots/etc/issue /etc/issue
+ln -s /home/$USER/swaydots/etc/motd /etc/motd
+ln -s /home/$USER/swaydots/sway/config /home/$USER/.config/sway/config
+ln -s /home/$USER/swaydots/sway/status.sh /home/$USER/.config/sway/status.sh
+ln -s /home/$USER/swaydots/sway/toggle-colors.sh /home/$USER/.config/sway/toggle-colors.sh
 
-ln -s ~/swaydots/aliases ~/.config/aliases
-ln -s ~/swaydots/profile ~/.profile
-ln -s ~/swaydots/ashrc ~/.ashrc
-ln -s ~/swaydots/bashrc ~/.config/bash/bashrc
-ln -s ~/swaydots/zshrc ~/.config/zsh/zshrc
+ln -sf /home/$USER/swaydots/sway/theme-dark.conf /home/$USER/.config/sway/theme.conf
+ln -sf /home/$USER/swaydots/foot/foot-dark.ini /home/$USER/.config/foot/foot.ini
+ln -sf /home/$USER/swaydots/mako/mako-dark.conf /home/$USER/.config/mako/config
+ln -s /home/$USER/swaydots/micro/settings.json /home/$USER/.config/micro/settings.json
+
+ln -s /home/$USER/swaydots/aliases /home/$USER/.config/aliases
+ln -s /home/$USER/swaydots/profile /home/$USER/.profile
+ln -s /home/$USER/swaydots/ashrc /home/$USER/.ashrc
+ln -s /home/$USER/swaydots/bashrc /home/$USER/.config/bash/bashrc
+ln -s /home/$USER/swaydots/zshrc /home/$USER/.config/zsh/zshrc
 
 #./mods
