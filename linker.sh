@@ -1,6 +1,17 @@
 #!/bin/sh
-# meant to run with doas
-USER="${DOAS_USER:-$1}"
+# Usage: ./linker.sh <user>       (run as root, e.g. inside chroot)
+#        doas ./linker.sh <user>  (live system)
+# Explicit $1 wins over DOAS_USER so doas-invoking user (e.g. host user)
+# cant leak in when an alpm-style target is intended.
+USER="${1:-$DOAS_USER}"
+
+if ! id "$USER" >/dev/null 2>&1; then
+    echo "linker.sh: user '$USER' does not exist on this system" && exit 1
+fi
+
+if [ ! -d "/home/$USER" ]; then
+    echo "linker.sh: /home/$USER missing" && exit 1
+fi
 
 PKGS="
     jq bash zsh zsh-vcs fd fzf grep diffutils iproute2 bottom
