@@ -48,4 +48,10 @@ ln -s /home/$USER/.swaydots/ashrc /home/$USER/.ashrc
 ln -s /home/$USER/.swaydots/bashrc /home/$USER/.config/bash/bashrc
 ln -s /home/$USER/.swaydots/zshrc /home/$USER/.config/zsh/zshrc
 
-./mods # now that we have bash = allow bashisms but limit in key scripts like status.sh
+# Hand /home/$USER to the user before running k/* (those scripts assume
+# non-root: they git clone into $HOME, write rcfiles, and 00_header_checks
+# bails on EUID 0). Without the chown the user-side git clones would hit
+# root-owned dirs.
+chown -R "$USER":"$USER" "/home/$USER"
+# we can now safely hand off to plugins k/ dir 
+su - "$USER" -c "cd /home/$USER/.swaydots && ./mods"
