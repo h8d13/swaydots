@@ -5,10 +5,6 @@ no extra deps only built-in ash + bash/zsh (fresh alpine install)
 
 `doas apk add jq zsh zsh-vcs bash fd fzf grep diffutils iproute2 bottom`
 
-## Cursors
-
-`doas apk add cursors-breeze`
-
 ## Notifications
 
 `doas apk add mako libnotify`
@@ -96,10 +92,7 @@ backbus
 
 `doas apk add dbus dbus-x11 upower` 
 
-Then add dbus to boot level.
-
 This provides userspace tools such as notifications, upower, ...
-
 Can test with **mod+U** which will return `5 updates available`
 
 ## Shortcuts Cheatsheet:

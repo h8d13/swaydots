@@ -1,6 +1,20 @@
-#!/bin/bash
+#!/bin/sh
 # meant to run with doas
 USER="${DOAS_USER:-$1}"
+
+PKGS="
+    git jq bash zsh zsh-vcs fd fzf grep diffutils iproute2 bottom
+    mako libnotify
+    mandoc man-pages mandoc-apropos less
+    mpv yt-dlp
+    qcalc
+    micro glow
+    nnn
+    wl-clipboard cliphist
+    chromium
+    dbus-x11 upower
+"
+apk add $PKGS
 
 mkdir -p /home/$USER/.config/bash
 mkdir -p /home/$USER/.config/zsh
@@ -31,4 +45,4 @@ ln -s /home/$USER/swaydots/ashrc /home/$USER/.ashrc
 ln -s /home/$USER/swaydots/bashrc /home/$USER/.config/bash/bashrc
 ln -s /home/$USER/swaydots/zshrc /home/$USER/.config/zsh/zshrc
 
-#./mods
+./mods # now that we have bash = allow bashisms but limit in key scripts like status.sh
