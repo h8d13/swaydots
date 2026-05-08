@@ -21,13 +21,15 @@ PKGS="
     mpv yt-dlp
     kcalc
     micro
-    glow@testing
     nnn
     wl-clipboard
     cliphist@testing
+    glow@testing
     chromium
     dbus-x11 upower
 "
+    #vscodium@testing
+
 apk add $PKGS
 
 mkdir -p /home/$USER/.config/bash
