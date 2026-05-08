@@ -34,9 +34,10 @@ XTRA_PKGS="
     cliphist@testing
     glow@testing
     chromium
-    dbus-x11 upower
+    dbus-x11
 "
     #vscodium@testing
+    #upower
 
 apk add $SWAY $XTRA_PKGS
 
