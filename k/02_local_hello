@@ -1,7 +1,0 @@
-#!/bin/bash
-mkdir -p "$L_HOME/bin"
-cat > "$L_HOME/bin/hello" << 'EOF'
-#!/bin/sh
-echo "Hello $USER, It's $(date +"%H:%M:%S")."
-EOF
-chmod +x "$L_HOME/bin/hello"

@@ -1,3 +1,0 @@
-#!/bin/bash
-export C_HOME="$HOME/.config/"
-export L_HOME="$HOME/.local/"

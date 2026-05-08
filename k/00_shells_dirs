@@ -1,3 +1,0 @@
-#!/bin/bash
-mkdir -p "$C_HOME/zsh/zshrc"
-mkdir -p "$C_HOME/bash/bashrc"
