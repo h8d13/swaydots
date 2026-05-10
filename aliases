@@ -33,10 +33,10 @@ alias pmem='top -bm -n 1'
 # example: cwifi "mynetwork" prompts for password if unkown
 
 cwifi() {
-    doas ip link set eth0 down && nmcli d wifi c "$1" -a && doas udhcpc -i wlan0
+    doas ip link set eth0 down && iwctl station wlan0 connect "$1"
 }
 lwifi() {
-    nmcli d wifi
+    iwctl station wlan0 scan && iwctl station wlan0 get-networks
 }
 
 # set cable back up remove wlan and get ip
