@@ -41,7 +41,7 @@ lwifi() {
 
 # set cable back up remove wlan and get ip
 ccable() {
-    doas ip link set eth0 up && doas ip link set wlan0 down && doas udhcpc -i eth0
+    iwctl station wlan0 disconnect && doas ip link set eth0 up && doas udhcpc -i eth0
 }
 
 # media
