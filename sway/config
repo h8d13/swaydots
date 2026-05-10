@@ -28,14 +28,9 @@ output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
 #
 # Example configuration:
 #
- exec swayidle -w \
-          timeout 300 'swaylock -f -c $lockcolor' \
-          timeout 600 'swaymsg "output * power off"' resume 'swaymsg "output * power on"' \
-          before-sleep 'swaylock -f -c $lockcolor'
-
-# This will lock your screen after 300 seconds of inactivity, then turn off
-# your displays after another 300 seconds, and turn your screens back on when
-# resumed. It will also lock your screen before your computer goes to sleep.
+exec swayidle -w
+# Events live in ~/.config/swayidle/config (auto-loaded).
+# Two-stage: blank at 240s, lock at 300s. 60s grace to wake without password.
 
 ### Services
 # Notification daemon

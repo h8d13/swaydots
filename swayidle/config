@@ -1,0 +1,7 @@
+# swayidle events. Parsed raw by swayidle, not by sway.
+# No variable expansion here, hardcode the lock color.
+# Grace window = lock_timeout - blank_timeout. Tune freely.
+
+timeout 240 'swaymsg "output * power off"' resume 'swaymsg "output * power on"'
+timeout 300 'swaylock -f -c 000000'
+before-sleep 'swaylock -f -c 000000'

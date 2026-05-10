@@ -48,6 +48,7 @@ mkdir -p /home/$USER/.config/sway
 mkdir -p /home/$USER/.config/foot
 mkdir -p /home/$USER/.config/mako
 mkdir -p /home/$USER/.config/micro
+mkdir -p /home/$USER/.config/swayidle
 mkdir -p /home/$USER/.local/bin
 
 # system
@@ -78,6 +79,7 @@ ln -s /home/$USER/.swaydots/bin/hello /home/$USER/.local/bin/hello
 ln -s /home/$USER/.swaydots/sway/config /home/$USER/.config/sway/config
 ln -s /home/$USER/.swaydots/sway/status.sh /home/$USER/.config/sway/status.sh
 ln -s /home/$USER/.swaydots/sway/toggle-colors.sh /home/$USER/.config/sway/toggle-colors.sh
+ln -s /home/$USER/.swaydots/swayidle/config /home/$USER/.config/swayidle/config
 
 ln -sf /home/$USER/.swaydots/sway/theme-dark.conf /home/$USER/.config/sway/theme.conf
 ln -sf /home/$USER/.swaydots/foot/foot-dark.ini /home/$USER/.config/foot/foot.ini
